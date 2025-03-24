@@ -1,6 +1,7 @@
 "use client"
 
 import { motion } from "framer-motion"
+import FindTheFox from "./find-the-fox"
 
 export default function AnnelePage() {
   return (
@@ -11,9 +12,10 @@ export default function AnnelePage() {
       className="max-w-4xl mx-auto"
     >
       <h1 className="text-3xl font-bold mb-6">Annele</h1>
-      <div className="prose dark:prose-invert">
-        <p>Welcome to the Annele section. Content coming soon.</p>
+      <div className="prose dark:prose-invert mb-8">
+        <p>Welcome to the Annele section. Try your luck at finding the fox!</p>
       </div>
+      <FindTheFox />
     </motion.div>
   )
 } 
