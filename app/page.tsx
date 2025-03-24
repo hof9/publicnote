@@ -17,7 +17,7 @@ export default function Home() {
         </p>
       </motion.div>
       
-      <motion.div
+      {/* <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.2, duration: 0.5 }}
@@ -42,7 +42,7 @@ export default function Home() {
             <p className="text-sm text-muted-foreground">{item.description}</p>
           </motion.div>
         ))}
-      </motion.div>
+      </motion.div> */}
     </div>
   )
 }

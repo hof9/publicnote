@@ -2,10 +2,11 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { Moon, Sun } from "lucide-react"
+import { Moon, Sun, Menu, X } from "lucide-react"
 import { useTheme } from "next-themes"
 import { cn } from "@/lib/utils"
 import { useEffect, useState } from "react"
+import { motion, AnimatePresence } from "framer-motion"
 
 const routes = [
   { href: "/", label: "Home" },
@@ -21,6 +22,7 @@ export function Nav() {
   const pathname = usePathname()
   const { theme, setTheme } = useTheme()
   const [mounted, setMounted] = useState(false)
+  const [isOpen, setIsOpen] = useState(false)
 
   useEffect(() => {
     setMounted(true)
@@ -32,12 +34,12 @@ export function Nav() {
 
   return (
     <nav className="fixed top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container flex h-14 items-center">
-        <div className="mr-4 flex">
+      <div className="container flex h-14 items-center justify-between">
+        <div className="flex items-center">
           <Link href="/" className="mr-6 flex items-center space-x-2">
             <span className="font-bold">Public Note</span>
           </Link>
-          <div className="flex space-x-6">
+          <div className="hidden md:flex space-x-6">
             {routes.map((route) => (
               <Link
                 key={route.href}
@@ -54,7 +56,7 @@ export function Nav() {
             ))}
           </div>
         </div>
-        <div className="flex flex-1 items-center justify-end space-x-2">
+        <div className="flex items-center space-x-4">
           <button
             onClick={() => setTheme(theme === "light" ? "dark" : "light")}
             className="rounded-md p-2 hover:bg-accent hover:text-accent-foreground"
@@ -65,8 +67,44 @@ export function Nav() {
               <Sun className="h-5 w-5" />
             )}
           </button>
+          <button
+            onClick={() => setIsOpen(!isOpen)}
+            className="md:hidden rounded-md p-2 hover:bg-accent hover:text-accent-foreground"
+          >
+            {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </button>
         </div>
       </div>
+
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.2 }}
+            className="md:hidden border-b bg-background"
+          >
+            <div className="container py-2">
+              {routes.map((route) => (
+                <Link
+                  key={route.href}
+                  href={route.href}
+                  onClick={() => setIsOpen(false)}
+                  className={cn(
+                    "block py-2 transition-colors hover:text-foreground/80",
+                    pathname === route.href
+                      ? "text-foreground"
+                      : "text-foreground/60"
+                  )}
+                >
+                  {route.label}
+                </Link>
+              ))}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </nav>
   )
 } 
