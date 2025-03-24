@@ -122,12 +122,12 @@ const PrimeCompositeLearner = () => {
 
   return (
     <div className="container mx-auto p-4 max-w-4xl">
-      <h1 className="text-3xl font-bold mb-4 text-center">Prime & Composite Numbers Explorer</h1>
+      <h1 className="text-3xl font-bold mb-4 text-center dark:text-white">Prime & Composite Numbers Explorer</h1>
       
       {/* Instructions */}
-      <div className="bg-gray-100 p-4 rounded-lg mb-4">
-        <h2 className="text-xl font-bold mb-2">Instructions:</h2>
-        <ol className="list-decimal pl-5">
+      <div className="bg-gray-100 dark:bg-gray-800 p-4 rounded-lg mb-4">
+        <h2 className="text-xl font-bold mb-2 dark:text-white">Instructions:</h2>
+        <ol className="list-decimal pl-5 dark:text-gray-200">
           <li>Click or tap numbers to toggle between: Number (default) → Prime (Yellow) → Composite (Gray)</li>
           <li>Start by eliminating every second number after 2 (all multiples of 2)</li>
           <li>Then eliminate every third number after 3 (all multiples of 3)</li>
@@ -141,16 +141,16 @@ const PrimeCompositeLearner = () => {
       {/* Color Key */}
       <div className="flex justify-center mb-4 space-x-4">
         <div className="flex items-center">
-          <div className="w-6 h-6 bg-white border mr-2"></div>
-          <span>Default</span>
+          <div className="w-6 h-6 bg-white dark:bg-gray-700 border dark:border-gray-600 mr-2"></div>
+          <span className="dark:text-white">Default</span>
         </div>
         <div className="flex items-center">
-          <div className="w-6 h-6 bg-yellow-300 mr-2"></div>
-          <span>Prime</span>
+          <div className="w-6 h-6 bg-yellow-300 dark:bg-yellow-500 mr-2"></div>
+          <span className="dark:text-white">Prime</span>
         </div>
         <div className="flex items-center">
-          <div className="w-6 h-6 bg-gray-300 mr-2"></div>
-          <span>Composite</span>
+          <div className="w-6 h-6 bg-gray-300 dark:bg-gray-600 mr-2"></div>
+          <span className="dark:text-white">Composite</span>
         </div>
       </div>
 
@@ -167,11 +167,14 @@ const PrimeCompositeLearner = () => {
               text-center 
               cursor-pointer 
               transition-all 
-              ${num.state === 'prime' ? 'bg-yellow-300' : 
-                num.state === 'composite' ? 'bg-gray-300' : 'bg-white'}
-              ${num.isHighlighted ? 'border-2 border-blue-500' : 'border-gray-300'}
-              ${num.isCorrect === false ? 'border-2 border-red-500' : 
-                num.isCorrect === true ? 'border-2 border-green-500' : ''}
+              dark:text-white
+              ${num.state === 'prime' ? 'bg-yellow-300 dark:bg-yellow-500' : 
+                num.state === 'composite' ? 'bg-gray-300 dark:bg-gray-600' : 
+                'bg-white dark:bg-gray-700'}
+              ${num.isHighlighted ? 'border-2 border-blue-500 dark:border-blue-400' : 
+                'border-gray-300 dark:border-gray-600'}
+              ${num.isCorrect === false ? 'border-2 border-red-500 dark:border-red-400' : 
+                num.isCorrect === true ? 'border-2 border-green-500 dark:border-green-400' : ''}
             `}
           >
             {num.value}
@@ -183,25 +186,25 @@ const PrimeCompositeLearner = () => {
       <div className="flex justify-center space-x-4 mt-4">
         <button 
           onClick={verifyAnswers}
-          className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 flex items-center"
+          className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 dark:bg-green-600 dark:hover:bg-green-700 flex items-center"
         >
           <CheckCircle2 className="mr-2" /> Verify Answers
         </button>
         <button 
           onClick={resetGame}
-          className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 flex items-center"
+          className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 dark:bg-red-600 dark:hover:bg-red-700 flex items-center"
         >
           <XCircle className="mr-2" /> Reset
         </button>
       </div>
 
       {/* Tutorial and Explanation Area */}
-      <div className="bg-blue-50 p-4 rounded-lg mt-4 flex items-center">
-        <Info className="mr-3 text-blue-500" />
-        <p className="text-lg flex-grow">{explanation}</p>
+      <div className="bg-blue-50 dark:bg-blue-900 p-4 rounded-lg mt-4 flex items-center">
+        <Info className="mr-3 text-blue-500 dark:text-blue-400" />
+        <p className="text-lg flex-grow dark:text-white">{explanation}</p>
         <button 
           onClick={() => setShowModal(true)} 
-          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700"
         >
           Start Tutorial
         </button>
@@ -210,19 +213,19 @@ const PrimeCompositeLearner = () => {
       {/* Tutorial Modal */}
       {showModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-          <div className="bg-white p-6 rounded-lg max-w-md w-full">
-            <h2 className="text-2xl font-bold mb-4">Prime Numbers Tutorial</h2>
-            <p className="mb-4">{tutorialSteps[tutorialStep].text}</p>
+          <div className="bg-white dark:bg-gray-800 p-6 rounded-lg max-w-md w-full">
+            <h2 className="text-2xl font-bold mb-4 dark:text-white">Prime Numbers Tutorial</h2>
+            <p className="mb-4 dark:text-gray-200">{tutorialSteps[tutorialStep].text}</p>
             <div className="flex justify-between">
               <button 
                 onClick={() => setShowModal(false)}
-                className="bg-gray-300 text-black px-4 py-2 rounded"
+                className="bg-gray-300 dark:bg-gray-700 text-black dark:text-white px-4 py-2 rounded hover:bg-gray-400 dark:hover:bg-gray-600"
               >
                 Close
               </button>
               <button 
                 onClick={progressTutorial}
-                className="bg-blue-500 text-white px-4 py-2 rounded"
+                className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700"
               >
                 {tutorialStep < tutorialSteps.length - 1 ? 'Next Step' : 'Finish'}
               </button>
