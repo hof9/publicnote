@@ -1,6 +1,7 @@
 "use client"
 
 import { motion } from "framer-motion"
+import Link from "next/link"
 
 export default function MathPage() {
   return (
@@ -12,7 +13,16 @@ export default function MathPage() {
     >
       <h1 className="text-3xl font-bold mb-6">Mathematics</h1>
       <div className="prose dark:prose-invert">
-        <p>Welcome to the Mathematics section. Content coming soon.</p>
+      </div>
+
+      <div className="grid gap-4">
+        <Link 
+          href="/math/prime-composite"
+          className="p-4 bg-black-50 rounded-lg shadow-md hover:shadow-lg transition-shadow border-2 border-black-200"
+        >
+          <h2 className="text-xl font-semibold text-black-800 mb-2">Prime and Composite Numbers</h2>
+          <p className="text-black-700">Learn about prime and composite numbers! Identify the prime or composite numbers.</p>
+        </Link>
       </div>
     </motion.div>
   )
