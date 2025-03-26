@@ -17,12 +17,12 @@ import {
   SidebarMenu,
   SidebarMenuItem,
   SidebarMenuButton,
-} from "@/components/ui/sidebar"
+} from "@/components/ui/sidebar" 
 
 const navItems = [
   { title: "Introduction", url: "/notes" },
-  { title: "Note 1", url: "/notes/note1" },
-  { title: "Note 2", url: "/notes/note2" },
+  { title: "Christian Theology", url: "/notes/christian-theology" },
+  { title: "History", url: "/notes/history" },
 ]
 
 
