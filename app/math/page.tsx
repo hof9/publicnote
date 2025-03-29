@@ -30,6 +30,13 @@ export default function MathPage() {
           <h2 className="text-xl font-semibold text-black-800 mb-2">Math Concepts</h2>
           <p className="text-black-700">Explore math concepts of prime, composite, square, even, odd numbers, and fractions.</p>
         </Link>
+        <Link 
+          href="/math/count-100"
+          className="p-4 bg-black-50 rounded-lg shadow-md hover:shadow-lg transition-shadow border-2 border-black-200"
+        >
+          <h2 className="text-xl font-semibold text-black-800 mb-2">Count to 100</h2>
+          <p className="text-black-700">A fun game where you count to 100 using a number line.</p>
+        </Link>
       </div>
     </motion.div>
   )
