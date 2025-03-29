@@ -107,7 +107,7 @@ const SortingItem = ({ id, shape, color, size }: SortingItemProps) => {
 
   return (
     <div
-      ref={drag}
+      ref={drag as any}
       className={`flex items-center justify-center p-2 bg-white rounded-lg shadow-md cursor-move transition-transform ${
         isDragging ? "opacity-50" : "opacity-100"
       } hover:scale-105`}
@@ -158,7 +158,7 @@ const SortingBin = ({ onDrop, criteria }: SortingBinProps) => {
 
   return (
     <div
-      ref={drop}
+      ref={drop as any}
       className={`w-48 h-48 border-4 rounded-lg flex flex-col items-center justify-center transition-colors ${
         isActive ? "border-primary bg-primary/20" : "border-dashed border-gray-400 bg-gray-100"
       }`}
