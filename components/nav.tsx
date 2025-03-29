@@ -10,7 +10,6 @@ import { motion, AnimatePresence } from "framer-motion"
 const routes = [
   { href: "/", label: "Home" },
   { href: "/math", label: "Math" },
-  // { href: "/photography", label: "Photography" },
   { href: "/notes", label: "Notes" },
   { href: "/annele", label: "Annele" },
 ]
