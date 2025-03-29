@@ -2,8 +2,7 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { Moon, Sun, Menu, X } from "lucide-react"
-import { useTheme } from "next-themes"
+import { Menu, X } from "lucide-react"
 import { cn } from "@/components/lib/utils"
 import { useEffect, useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
@@ -18,7 +17,6 @@ const routes = [
 
 export function Nav() {
   const pathname = usePathname()
-  const { theme, setTheme } = useTheme()
   const [mounted, setMounted] = useState(false)
   const [isOpen, setIsOpen] = useState(false)
 
@@ -55,16 +53,6 @@ export function Nav() {
           </div>
         </div>
         <div className="flex items-center space-x-4">
-          <button
-            onClick={() => setTheme(theme === "light" ? "dark" : "light")}
-            className="rounded-md p-2 hover:bg-accent hover:text-accent-foreground"
-          >
-            {theme === "light" ? (
-              <Moon className="h-5 w-5" />
-            ) : (
-              <Sun className="h-5 w-5" />
-            )}
-          </button>
           <button
             onClick={() => setIsOpen(!isOpen)}
             className="md:hidden rounded-md p-2 hover:bg-accent hover:text-accent-foreground"
