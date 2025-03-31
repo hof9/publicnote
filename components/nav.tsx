@@ -10,8 +10,8 @@ import { motion, AnimatePresence } from "framer-motion"
 const routes = [
   { href: "/", label: "Home" },
   { href: "/math", label: "Math" },
-  { href: "/notes", label: "Notes" },
   { href: "/annele", label: "Annele" },
+  { href: "https://hof9.notion.site/", label: "Notion" },
 ]
 
 export function Nav() {
