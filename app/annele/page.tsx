@@ -20,6 +20,13 @@ export default function AnnelePage() {
           <h2 className="text-xl font-semibold text-black-800 mb-2">Find the Fox</h2>
           <p className="text-black-700">A fun game where you search for a hidden fox in the forest using temperature hints.</p>
         </Link>
+        <Link 
+          href="/annele/lottery"
+          className="p-4 bg-black-50 rounded-lg shadow-md hover:shadow-lg transition-shadow border-2 border-black-200"
+        >
+          <h2 className="text-xl font-semibold text-black-800 mb-2">Lucky Draw Lottery</h2>
+          <p className="text-black-700">A fun game where you can win prizes by drawing numbers.</p>
+        </Link>
       </div>
     </motion.div>
   )
