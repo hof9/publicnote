@@ -26,17 +26,17 @@ export default function CountingApp() {
   }[step]
 
   const bgColors = {
-    1: "bg-blue-500 dark:bg-blue-600",
-    2: "bg-green-500 dark:bg-green-600",
-    5: "bg-yellow-500 dark:bg-yellow-600",
-    10: "bg-red-500 dark:bg-red-600",
+    1: "bg-blue-500",
+    2: "bg-green-500",
+    5: "bg-yellow-500",
+    10: "bg-red-500",
   }[step]
 
   const lightBgColors = {
-    1: "bg-blue-100 dark:bg-blue-950",
-    2: "bg-green-100 dark:bg-green-950",
-    5: "bg-yellow-100 dark:bg-yellow-950",
-    10: "bg-red-100 dark:bg-red-950",
+    1: "bg-blue-100",
+    2: "bg-green-100",
+    5: "bg-yellow-100",
+    10: "bg-red-100",
   }[step]
 
   // Auto-counting effect
@@ -107,17 +107,17 @@ export default function CountingApp() {
   // HOME VIEW
   if (view === "home") {
     return (
-      <main className="min-h-screen bg-gradient-to-b from-blue-50 to-purple-50 dark:from-blue-950 dark:to-purple-950 p-4 md:p-8">
+      <main className="min-h-screen bg-gradient-to-b from-blue-50 to-purple-50 p-4 md:p-8">
         <div className="mx-auto max-w-4xl">
           <div className="mb-8 text-center">
-            <h1 className="text-3xl font-bold text-primary md:text-5xl dark:text-primary">Count to 100!</h1>
-            <p className="mt-2 text-lg text-muted-foreground dark:text-muted-foreground">Learn to count by 1s, 2s, 5s, and 10s</p>
+            <h1 className="text-3xl font-bold text-primary md:text-5xl">Count to 100!</h1>
+            <p className="mt-2 text-lg text-muted-foreground">Learn to count by 1s, 2s, 5s, and 10s</p>
           </div>
 
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
             <button onClick={() => startCounting(1)} className="block text-left">
-              <Card className="h-full transition-all hover:shadow-lg dark:bg-card">
-                <CardHeader className="bg-blue-100 dark:bg-blue-950 rounded-t-lg">
+              <Card className="h-full transition-all hover:shadow-lg">
+                <CardHeader className="bg-blue-100 rounded-t-lg">
                   <CardTitle className="text-2xl text-center">Count by 1s</CardTitle>
                   <CardDescription className="text-center">1, 2, 3, 4, 5...</CardDescription>
                 </CardHeader>
@@ -126,7 +126,7 @@ export default function CountingApp() {
                     {[1, 2, 3, 4, 5].map((num) => (
                       <div
                         key={num}
-                        className="flex h-12 w-12 items-center justify-center rounded-full bg-blue-500 dark:bg-blue-600 text-xl font-bold text-white"
+                        className="flex h-12 w-12 items-center justify-center rounded-full bg-blue-500 text-xl font-bold text-white"
                       >
                         {num}
                       </div>
@@ -137,8 +137,8 @@ export default function CountingApp() {
             </button>
 
             <button onClick={() => startCounting(2)} className="block text-left">
-              <Card className="h-full transition-all hover:shadow-lg dark:bg-card">
-                <CardHeader className="bg-green-100 dark:bg-green-950 rounded-t-lg">
+              <Card className="h-full transition-all hover:shadow-lg">
+                <CardHeader className="bg-green-100 rounded-t-lg">
                   <CardTitle className="text-2xl text-center">Count by 2s</CardTitle>
                   <CardDescription className="text-center">2, 4, 6, 8, 10...</CardDescription>
                 </CardHeader>
@@ -147,7 +147,7 @@ export default function CountingApp() {
                     {[2, 4, 6, 8, 10].map((num) => (
                       <div
                         key={num}
-                        className="flex h-12 w-12 items-center justify-center rounded-full bg-green-500 dark:bg-green-600 text-xl font-bold text-white"
+                        className="flex h-12 w-12 items-center justify-center rounded-full bg-green-500 text-xl font-bold text-white"
                       >
                         {num}
                       </div>
@@ -158,8 +158,8 @@ export default function CountingApp() {
             </button>
 
             <button onClick={() => startCounting(5)} className="block text-left">
-              <Card className="h-full transition-all hover:shadow-lg dark:bg-card">
-                <CardHeader className="bg-yellow-100 dark:bg-yellow-950 rounded-t-lg">
+              <Card className="h-full transition-all hover:shadow-lg">
+                <CardHeader className="bg-yellow-100 rounded-t-lg">
                   <CardTitle className="text-2xl text-center">Count by 5s</CardTitle>
                   <CardDescription className="text-center">5, 10, 15, 20, 25...</CardDescription>
                 </CardHeader>
@@ -168,7 +168,7 @@ export default function CountingApp() {
                     {[5, 10, 15, 20, 25].map((num) => (
                       <div
                         key={num}
-                        className="flex h-12 w-12 items-center justify-center rounded-full bg-yellow-500 dark:bg-yellow-600 text-xl font-bold text-white"
+                        className="flex h-12 w-12 items-center justify-center rounded-full bg-yellow-500 text-xl font-bold text-white"
                       >
                         {num}
                       </div>
@@ -179,8 +179,8 @@ export default function CountingApp() {
             </button>
 
             <button onClick={() => startCounting(10)} className="block text-left">
-              <Card className="h-full transition-all hover:shadow-lg dark:bg-card">
-                <CardHeader className="bg-red-100 dark:bg-red-950 rounded-t-lg">
+              <Card className="h-full transition-all hover:shadow-lg">
+                <CardHeader className="bg-red-100 rounded-t-lg">
                   <CardTitle className="text-2xl text-center">Count by 10s</CardTitle>
                   <CardDescription className="text-center">10, 20, 30, 40, 50...</CardDescription>
                 </CardHeader>
@@ -189,7 +189,7 @@ export default function CountingApp() {
                     {[10, 20, 30, 40, 50].map((num) => (
                       <div
                         key={num}
-                        className="flex h-12 w-12 items-center justify-center rounded-full bg-red-500 dark:bg-red-600 text-xl font-bold text-white"
+                        className="flex h-12 w-12 items-center justify-center rounded-full bg-red-500 text-xl font-bold text-white"
                       >
                         {num}
                       </div>
@@ -238,7 +238,7 @@ export default function CountingApp() {
           <div className="w-10"></div> {/* Spacer for alignment */}
         </div>
 
-        <Card className="mb-6 p-6 text-center dark:bg-card">
+        <Card className="mb-6 p-6 text-center">
           <div className="mb-4">
             <span className="text-6xl font-bold md:text-8xl">{currentCount}</span>
           </div>
@@ -291,10 +291,10 @@ export default function CountingApp() {
                 className={`flex h-8 w-full items-center justify-center rounded-md text-sm font-medium transition-all md:h-10 md:text-base
                   ${
                     isCurrentNumber
-                      ? `${bgColors} text-white ring-4 ring-offset-2 dark:ring-offset-background`
+                      ? `${bgColors} text-white ring-4 ring-offset-2`
                       : isHighlighted
                         ? `${bgColors} text-white`
-                        : "bg-white dark:bg-card"
+                        : "bg-white"
                   }`}
               >
                 {num}

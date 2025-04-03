@@ -132,7 +132,7 @@ export default function NumberGrid() {
     const types = getNumberTypes(num)
     const matchingTypes = types.filter((type) => selectedTypes.includes(type))
 
-    if (matchingTypes.length === 0) return "bg-gray-100 dark:bg-gray-800"
+    if (matchingTypes.length === 0) return "bg-gray-100"
 
     if (matchingTypes.length === 1) {
       return numberTypeInfo[matchingTypes[0]].color
@@ -152,8 +152,8 @@ export default function NumberGrid() {
       cells.push(
         <div
           key={i}
-          className={`aspect-square flex items-center justify-center border border-gray-200 dark:border-gray-700 text-xs sm:text-sm transition-colors duration-200 ${
-            isHighlighted ? getCellBackground(i) + " text-white" : "bg-gray-100 dark:bg-gray-800"
+          className={`aspect-square flex items-center justify-center border border-gray-200 text-xs sm:text-sm transition-colors duration-200 ${
+            isHighlighted ? getCellBackground(i) + " text-white" : "bg-gray-100"
           }`}
           onMouseEnter={() => setHoveredNumber(i)}
           onMouseLeave={() => setHoveredNumber(null)}
@@ -171,7 +171,7 @@ export default function NumberGrid() {
 
     const types = getNumberTypes(hoveredNumber)
     return (
-      <div className="mt-4 p-4 bg-gray-100 dark:bg-gray-800 rounded-md">
+        <div className="mt-4 p-4 bg-gray-100 rounded-md">
         <h3 className="font-bold mb-2">Number {hoveredNumber}</h3>
         <div className="flex flex-wrap gap-2">
           {types.map((type) => (
@@ -250,7 +250,7 @@ export default function NumberGrid() {
         </CardHeader>
         <CardContent>
           <div
-            className="grid border border-gray-200 dark:border-gray-700 rounded-md overflow-hidden"
+            className="grid border border-gray-200 rounded-md overflow-hidden"
             style={{
               gridTemplateColumns: `repeat(${gridSize}, minmax(0, 1fr))`,
               gridTemplateRows: `repeat(${gridSize}, minmax(0, 1fr))`,
