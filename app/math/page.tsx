@@ -66,6 +66,15 @@ export default function MathPage() {
           <h2 className="text-xl font-semibold text-black-800">Number Visualization</h2>
           </div>
        </Link>
+       <Link 
+          href="/math/interactive-number-grid"
+          className="p-4 bg-black-50 rounded-lg shadow-md hover:shadow-lg transition-shadow border-2 border-black-200"
+        > 
+          <div className="flex items-center gap-2">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="lucide lucide-grid3x3-icon lucide-grid-3x3"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M3 15h18"/><path d="M9 3v18"/><path d="M15 3v18"/></svg>          <h2 className="text-xl font-semibold text-black-800">Interactive Number Grid</h2>
+          </div>
+       </Link>
+
       </div>
     </motion.div>
   )
