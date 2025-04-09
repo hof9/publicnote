@@ -145,7 +145,7 @@ const PrimeCompositeLearner = () => {
           <span>Default</span>
         </div>
         <div className="flex items-center">
-          <div className="w-6 h-6 bg-yellow-300 mr-2"></div>
+          <div className="w-6 h-6 bg-yellow-500 mr-2"></div>
           <span>Prime</span>
         </div>
         <div className="flex items-center">
@@ -168,7 +168,7 @@ const PrimeCompositeLearner = () => {
               cursor-pointer 
               transition-all 
               
-              ${num.state === 'prime' ? 'bg-yellow-300' : 
+              ${num.state === 'prime' ? 'bg-yellow-500' : 
                 num.state === 'composite' ? 'bg-gray-300' : 
                 'bg-white'}
               ${num.isHighlighted ? 'border-2 border-blue-500' : 
