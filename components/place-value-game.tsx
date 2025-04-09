@@ -11,6 +11,9 @@ export default function PlaceValueGame() {
   const [totalValue, setTotalValue] = useState(0)
   const audioRef = useRef<HTMLAudioElement | null>(null)
   const [audioInitialized, setAudioInitialized] = useState(false)
+  const audioContextRef = useRef<AudioContext | null>(null)
+  const oscillatorRef = useRef<OscillatorNode | null>(null)
+  const gainNodeRef = useRef<GainNode | null>(null)
 
   // Calculate total value when place values change
   useEffect(() => {
@@ -21,15 +24,24 @@ export default function PlaceValueGame() {
   useEffect(() => {
     const handleUserInteraction = () => {
       if (!audioInitialized) {
-        // Create and initialize audio element with base64 sound
-        const audio = new Audio('data:audio/mp3;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU4Ljc2LjEwMAAAAAAAAAAAAAAA//OEAAAAAAAAAAAAAAAAAAAAAAAASW5mbwAAAA8AAAAEAAABIADAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDV1dXV1dXV1dXV1dXV1dXV1dXV1dXV1dXV6urq6urq6urq6urq6urq6urq6urq6urq6v////////////////////////////////8AAAAATGF2YzU4LjQxAAAAAAAAAAAAAAAAJAAAAAAAAAAAASDs90hvAAAAAAAAAAAAAAAAAAAA//MUZAAAAAGkAAAAAAAAA0gAAAAATEFN//MUZAMAAAGkAAAAAAAAA0gAAAAARTMu//MUZAYAAAGkAAAAAAAAA0gAAAAAAAAA')
-        audio.load()
-        audioRef.current = audio
-        setAudioInitialized(true)
-        
-        // Remove event listeners after initialization
-        document.removeEventListener('click', handleUserInteraction)
-        document.removeEventListener('touchstart', handleUserInteraction)
+        try {
+          // Create audio context
+          const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)()
+          audioContextRef.current = audioContext
+          
+          // Create gain node for volume control
+          const gainNode = audioContext.createGain()
+          gainNode.gain.value = 0.1 // Set volume to 10%
+          gainNodeRef.current = gainNode
+          
+          setAudioInitialized(true)
+          
+          // Remove event listeners after initialization
+          document.removeEventListener('click', handleUserInteraction)
+          document.removeEventListener('touchstart', handleUserInteraction)
+        } catch (error) {
+          console.error('Audio initialization failed:', error)
+        }
       }
     }
 
@@ -59,13 +71,13 @@ export default function PlaceValueGame() {
   const handleRemoveStar = (type: "hundreds" | "tens" | "ones") => {
     if (type === "hundreds" && hundreds > 0) {
       setHundreds(hundreds - 1)
-      playSound()
+      playRemoveSound()
     } else if (type === "tens" && tens > 0) {
       setTens(tens - 1)
-      playSound()
+      playRemoveSound()
     } else if (type === "ones" && ones > 0) {
       setOnes(ones - 1)
-      playSound()
+      playRemoveSound()
     }
   }
 
@@ -76,15 +88,144 @@ export default function PlaceValueGame() {
   }
 
   const playSound = () => {
-    if (!audioInitialized || !audioRef.current) return
-    
+    if (!audioInitialized || !audioContextRef.current || !gainNodeRef.current) return
+
     try {
-      audioRef.current.currentTime = 0
-      audioRef.current.play().catch(() => {
-        // Silently fail - audio is non-essential
-      })
+      const audioContext = audioContextRef.current
+      
+      // Create main oscillator
+      const oscillator = audioContext.createOscillator()
+      oscillator.type = 'square' // More classic UI sound
+      
+      // Create frequency modulation for subtle movement
+      const modulator = audioContext.createOscillator()
+      modulator.type = 'sine'
+      modulator.frequency.setValueAtTime(4, audioContext.currentTime) // Very slow modulation
+      
+      const modulatorGain = audioContext.createGain()
+      modulatorGain.gain.setValueAtTime(10, audioContext.currentTime) // Minimal modulation
+      
+      // Connect modulation
+      modulator.connect(modulatorGain)
+      modulatorGain.connect(oscillator.frequency)
+      
+      // Set base frequency for classic UI blip
+      oscillator.frequency.setValueAtTime(250, audioContext.currentTime) // Lower frequency
+      
+      // Create low-pass filter for dulling
+      const filter = audioContext.createBiquadFilter()
+      filter.type = 'lowpass'
+      filter.frequency.setValueAtTime(400, audioContext.currentTime) // Much lower cutoff
+      filter.Q.setValueAtTime(0.5, audioContext.currentTime) // Reduce resonance
+      
+      // Create subtle distortion
+      const waveshaper = audioContext.createWaveShaper()
+      const curve = new Float32Array(65536)
+      for (let i = 0; i < 65536; i++) {
+        const x = (i - 32768) / 32768
+        curve[i] = Math.tanh(x * 0.5) // Subtle soft clipping
+      }
+      waveshaper.curve = curve
+      
+      // Create volume envelope
+      const gainNode = audioContext.createGain()
+      gainNode.gain.setValueAtTime(0.1, audioContext.currentTime) // Lower volume
+      gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.2)
+      
+      // Connect everything with filter and distortion
+      oscillator.connect(filter)
+      filter.connect(waveshaper)
+      waveshaper.connect(gainNode)
+      gainNode.connect(audioContext.destination)
+      
+      // Start and stop
+      modulator.start()
+      oscillator.start()
+      oscillator.stop(audioContext.currentTime + 0.2)
+      modulator.stop(audioContext.currentTime + 0.2)
+      
+      // Clean up
+      oscillator.onended = () => {
+        oscillator.disconnect()
+        modulator.disconnect()
+        modulatorGain.disconnect()
+        filter.disconnect()
+        waveshaper.disconnect()
+        gainNode.disconnect()
+      }
     } catch (error) {
-      // Silently fail - audio is non-essential
+      console.error('Sound playback failed:', error)
+    }
+  }
+
+  const playRemoveSound = () => {
+    if (!audioInitialized || !audioContextRef.current || !gainNodeRef.current) return
+
+    try {
+      const audioContext = audioContextRef.current
+      
+      // Create main oscillator
+      const oscillator = audioContext.createOscillator()
+      oscillator.type = 'square' // Classic UI sound
+      
+      // Create subtle frequency modulation
+      const modulator = audioContext.createOscillator()
+      modulator.type = 'sine'
+      modulator.frequency.setValueAtTime(3, audioContext.currentTime) // Very slow modulation
+      
+      const modulatorGain = audioContext.createGain()
+      modulatorGain.gain.setValueAtTime(8, audioContext.currentTime) // Minimal modulation
+      
+      // Connect modulation
+      modulator.connect(modulatorGain)
+      modulatorGain.connect(oscillator.frequency)
+      
+      // Set frequency for classic UI blip
+      oscillator.frequency.setValueAtTime(450, audioContext.currentTime) // Lower frequency
+      
+      // Create low-pass filter
+      const filter = audioContext.createBiquadFilter()
+      filter.type = 'lowpass'
+      filter.frequency.setValueAtTime(600, audioContext.currentTime) // Lower cutoff
+      filter.Q.setValueAtTime(0.5, audioContext.currentTime) // Reduce resonance
+      
+      // Create subtle distortion
+      const waveshaper = audioContext.createWaveShaper()
+      const curve = new Float32Array(65536)
+      for (let i = 0; i < 65536; i++) {
+        const x = (i - 32768) / 32768
+        curve[i] = Math.tanh(x * 0.5) // Subtle soft clipping
+      }
+      waveshaper.curve = curve
+      
+      // Create volume envelope
+      const gainNode = audioContext.createGain()
+      gainNode.gain.setValueAtTime(0.08, audioContext.currentTime) // Lower volume
+      gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.15)
+      
+      // Connect everything with filter and distortion
+      oscillator.connect(filter)
+      filter.connect(waveshaper)
+      waveshaper.connect(gainNode)
+      gainNode.connect(audioContext.destination)
+      
+      // Start and stop
+      modulator.start()
+      oscillator.start()
+      oscillator.stop(audioContext.currentTime + 0.15)
+      modulator.stop(audioContext.currentTime + 0.15)
+      
+      // Clean up
+      oscillator.onended = () => {
+        oscillator.disconnect()
+        modulator.disconnect()
+        modulatorGain.disconnect()
+        filter.disconnect()
+        waveshaper.disconnect()
+        gainNode.disconnect()
+      }
+    } catch (error) {
+      console.error('Sound playback failed:', error)
     }
   }
 
