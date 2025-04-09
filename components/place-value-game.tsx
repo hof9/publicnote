@@ -20,42 +20,39 @@ export default function PlaceValueGame() {
     setTotalValue(hundreds * 100 + tens * 10 + ones)
   }, [hundreds, tens, ones])
 
-  // Initialize audio after first user interaction
-  useEffect(() => {
-    const handleUserInteraction = () => {
-      if (!audioInitialized) {
-        try {
-          // Create audio context
-          const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)()
-          audioContextRef.current = audioContext
-          
-          // Create gain node for volume control
-          const gainNode = audioContext.createGain()
-          gainNode.gain.value = 0.1 // Set volume to 10%
-          gainNodeRef.current = gainNode
-          
-          setAudioInitialized(true)
-          
-          // Remove event listeners after initialization
-          document.removeEventListener('click', handleUserInteraction)
-          document.removeEventListener('touchstart', handleUserInteraction)
-        } catch (error) {
-          console.error('Audio initialization failed:', error)
-        }
+  const initializeAudioContext = () => {
+    if (!audioInitialized) {
+      try {
+        // Create audio context with options for iOS compatibility
+        const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)({
+          // Add these options for better iOS compatibility
+          sampleRate: 44100,
+          latencyHint: 'interactive'
+        });
+        
+        audioContextRef.current = audioContext;
+        
+        // Create gain node
+        const gainNode = audioContext.createGain();
+        gainNode.gain.value = 0.1;
+        gainNodeRef.current = gainNode;
+        
+        // Resume the audio context (important for iOS)
+        audioContext.resume().then(() => {
+          setAudioInitialized(true);
+        });
+      } catch (error) {
+        console.error('Audio initialization failed:', error);
       }
     }
-
-    // Add event listeners for user interaction
-    document.addEventListener('click', handleUserInteraction)
-    document.addEventListener('touchstart', handleUserInteraction)
-
-    return () => {
-      document.removeEventListener('click', handleUserInteraction)
-      document.removeEventListener('touchstart', handleUserInteraction)
-    }
-  }, [audioInitialized])
+  }
 
   const handleAdd = (type: "hundreds" | "tens" | "ones") => {
+    // Initialize audio on first interaction
+    if (!audioInitialized) {
+      initializeAudioContext();
+    }
+    
     if (type === "hundreds" && hundreds < 9) {
       setHundreds(hundreds + 1)
       playSound()
@@ -69,6 +66,11 @@ export default function PlaceValueGame() {
   }
 
   const handleRemoveStar = (type: "hundreds" | "tens" | "ones") => {
+    // Initialize audio on first interaction
+    if (!audioInitialized) {
+      initializeAudioContext();
+    }
+    
     if (type === "hundreds" && hundreds > 0) {
       setHundreds(hundreds - 1)
       playRemoveSound()
@@ -88,10 +90,15 @@ export default function PlaceValueGame() {
   }
 
   const playSound = () => {
-    if (!audioInitialized || !audioContextRef.current || !gainNodeRef.current) return
+    if (!audioInitialized || !audioContextRef.current || !gainNodeRef.current) return;
 
     try {
-      const audioContext = audioContextRef.current
+      const audioContext = audioContextRef.current;
+      
+      // Ensure audio context is running (important for iOS)
+      if (audioContext.state !== 'running') {
+        audioContext.resume();
+      }
       
       // Create main oscillator
       const oscillator = audioContext.createOscillator()
@@ -159,10 +166,15 @@ export default function PlaceValueGame() {
   }
 
   const playRemoveSound = () => {
-    if (!audioInitialized || !audioContextRef.current || !gainNodeRef.current) return
+    if (!audioInitialized || !audioContextRef.current || !gainNodeRef.current) return;
 
     try {
-      const audioContext = audioContextRef.current
+      const audioContext = audioContextRef.current;
+      
+      // Ensure audio context is running (important for iOS)
+      if (audioContext.state !== 'running') {
+        audioContext.resume();
+      }
       
       // Create main oscillator
       const oscillator = audioContext.createOscillator()
