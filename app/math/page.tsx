@@ -29,30 +29,12 @@ export default function MathPage() {
           </div>
         </Link>
         <Link 
-          href="/math/math-concepts"
-          className="p-4 bg-black-50 rounded-lg shadow-md hover:shadow-lg transition-shadow border-2 border-black-200"
-        >
-          <div className="flex items-center gap-2">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="rgb(234 179 8)" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="lucide lucide-grid2x2-icon lucide-grid-2x2"><path d="M12 3v18"/><path d="M3 12h18"/><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M12 8v8M8 12h8" stroke="black"/></svg>
-          <h2 className="text-xl font-semibold text-black-800">Math Concepts</h2>
-          </div>
-        </Link>
-        <Link 
           href="/math/count-100"
           className="p-4 bg-black-50 rounded-lg shadow-md hover:shadow-lg transition-shadow border-2 border-black-200"
         >
           <div className="flex items-center gap-2">
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="rgb(234 179 8)" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="lucide lucide-hash-icon lucide-hash"><rect width="18" height="18" x="3" y="3" rx="2"/><line x1="4" x2="20" y1="9" y2="9"/><line x1="4" x2="20" y1="15" y2="15"/><line x1="10" x2="8" y1="3" y2="21"/><line x1="16" x2="14" y1="3" y2="21"/></svg>
             <h2 className="text-xl font-semibold text-black-800">Count to 100</h2>
-          </div>
-        </Link>
-        <Link 
-          href="/math/odd-number"
-          className="p-4 bg-black-50 rounded-lg shadow-md hover:shadow-lg transition-shadow border-2 border-black-200"
-        >
-          <div className="flex items-center gap-2">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="rgb(234 179 8)" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="lucide lucide-tally3-icon lucide-tally-3"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M7 4v16"/><path d="M12 4v16"/><path d="M17 4v16"/></svg>
-          <h2 className="text-xl font-semibold text-black-800">Odd Numbers</h2>
           </div>
         </Link>
         <Link 
