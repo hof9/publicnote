@@ -116,17 +116,6 @@ export default function RationalNumberVisualizer() {
               onValueChange={(values) => handleDenominatorChange(values[0])}
             />
           </div>
-
-          {simplified.numerator !== numerator || simplified.denominator !== denominator ? (
-            <div className="p-3 bg-blue-50 rounded-md">
-              <p className="text-sm">
-                This fraction can be simplified to:
-                <span className="font-bold ml-1">
-                  {simplified.numerator}/{simplified.denominator}
-                </span>
-              </p>
-            </div>
-          ) : null}
         </div>
       </div>
     </Card>
