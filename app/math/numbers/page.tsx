@@ -59,12 +59,12 @@ export default function NumbersPage() {
         <div>
           <CardTitle>Natural Numbers</CardTitle>
           <CardDescription>
-            Counting numbers (1, 2, 3, 4, 5, ...)
+            Counting numbers
           </CardDescription>
         </div>
         <button 
           onClick={() => startAnimation('natural')}
-          className="w-12 h-12 rounded-full border-2 border-black bg-yellow-500 text-black font-bold flex items-center justify-center hover:bg-yellow-600 transition-colors active:scale-95"
+          className="min-w-[48px] w-12 h-12 rounded-full border-2 border-black bg-yellow-500 text-black font-bold flex items-center justify-center hover:bg-yellow-600 transition-colors active:scale-95"
         >
           Go
         </button>
@@ -96,12 +96,12 @@ export default function NumbersPage() {
         <div>
           <CardTitle>Whole Numbers</CardTitle>
           <CardDescription>
-            Natural numbers including zero (0, 1, 2, 3, 4, ...)
+            Natural numbers including zero
           </CardDescription>
         </div>
         <button 
           onClick={() => startAnimation('whole')}
-          className="w-12 h-12 rounded-full border-2 border-black bg-yellow-500 text-black font-bold flex items-center justify-center hover:bg-yellow-600 transition-colors active:scale-95"
+          className="min-w-[48px] w-12 h-12 rounded-full border-2 border-black bg-yellow-500 text-black font-bold flex items-center justify-center hover:bg-yellow-600 transition-colors active:scale-95"
         >
           Go
         </button>
@@ -133,12 +133,12 @@ export default function NumbersPage() {
         <div>
           <CardTitle>Integers</CardTitle>
           <CardDescription>
-            Positive and negative whole numbers (..., -2, -1, 0, 1, 2, ...)
+          Whole numbers and their negatives
           </CardDescription>
         </div>
         <button 
           onClick={() => startAnimation('integer')}
-          className="w-12 h-12 rounded-full border-2 border-black bg-yellow-500 text-black font-bold flex items-center justify-center hover:bg-yellow-600 transition-colors active:scale-95"
+          className="min-w-[48px] w-12 h-12 rounded-full border-2 border-black bg-yellow-500 text-black font-bold flex items-center justify-center hover:bg-yellow-600 transition-colors active:scale-95"
         >
           Go
         </button>
@@ -170,12 +170,12 @@ export default function NumbersPage() {
         <div>
           <CardTitle>Rational Numbers</CardTitle>
           <CardDescription>
-            Numbers that can be expressed as fractions (½, ¾, 1.5, -2.25, ...)
+            Numbers expressible as fractions
           </CardDescription>
         </div>
         <button 
           onClick={() => startAnimation('rational')}
-          className="w-12 h-12 rounded-full border-2 border-black bg-yellow-500 text-black font-bold flex items-center justify-center hover:bg-yellow-600 transition-colors active:scale-95"
+          className="min-w-[48px] w-12 h-12 rounded-full border-2 border-black bg-yellow-500 text-black font-bold flex items-center justify-center hover:bg-yellow-600 transition-colors active:scale-95"
         >
           Go
         </button>
@@ -191,51 +191,49 @@ export default function NumbersPage() {
               }}
               transition={{ duration: 0.3 }}
             >
-              <div className="w-12 h-12 sm:w-16 sm:h-16 border-2 border-black rounded-lg flex items-center justify-center text-xl sm:text-2xl font-bold">
+              <div className={`w-12 h-12 sm:w-16 sm:h-16 border-2 border-black rounded-lg flex items-center justify-center ${index >= 2 ? 'text-lg sm:text-xl' : 'text-xl sm:text-2xl'} font-bold`}>
                 {num}
               </div>
             </motion.div>
           ))}
         </div>
-                <div className="mt-6" />
-      <button
-        onClick={() => {
-          const modal = document.createElement('div')
-          modal.className = 'fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4'
-          modal.innerHTML = `
-            <div class="bg-white rounded-lg p-4 w-full max-w-4xl max-h-[90vh] overflow-y-auto">
-              <div class="flex justify-end mb-4">
-                <button class="text-gray-500 hover:text-gray-700" onclick="this.parentElement.parentElement.parentElement.remove()">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                </button>
+        <div className="mt-6" />
+        <button
+          onClick={() => {
+            const modal = document.createElement('div')
+            modal.className = 'fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4'
+            modal.innerHTML = `
+              <div class="bg-white rounded-lg p-4 w-full max-w-4xl max-h-[90vh] overflow-y-auto">
+                <div class="flex justify-end mb-4">
+                  <button class="text-gray-500 hover:text-gray-700" onclick="this.parentElement.parentElement.parentElement.remove()">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                </div>
+                <div id="rational-visualizer-root"></div>
               </div>
-              <div id="rational-visualizer-root"></div>
-            </div>
-          `
-          document.body.appendChild(modal)
-          
-          const root = document.getElementById('rational-visualizer-root')
-          if (root) {
-            const visualizer = document.createElement('div')
-            visualizer.id = 'rational-number-visualizer'
-            root.appendChild(visualizer)
+            `
+            document.body.appendChild(modal)
             
-            // Dynamically import and render the visualizer
-            import('./_components/rational-number-visualizer').then(module => {
-              const React = require('react')
-              const ReactDOM = require('react-dom')
-              ReactDOM.render(React.createElement(module.default), visualizer)
-            })
-          }
-        }}
-        className="mt-4 px-4 py-2 bg-yellow-500 text-black border-2 border-black rounded-lg hover:bg-yellow-600 transition-colors"
-      >
-        Visualization
-      </button>
-
-
+            const root = document.getElementById('rational-visualizer-root')
+            if (root) {
+              const visualizer = document.createElement('div')
+              visualizer.id = 'rational-number-visualizer'
+              root.appendChild(visualizer)
+              
+              // Dynamically import and render the visualizer
+              import('./_components/rational-number-visualizer').then(module => {
+                const React = require('react')
+                const ReactDOM = require('react-dom')
+                ReactDOM.render(React.createElement(module.default), visualizer)
+              })
+            }
+          }}
+          className="mt-4 px-4 py-2 bg-yellow-500 text-black border-2 border-black rounded-lg hover:bg-yellow-600 transition-colors"
+        >
+          Visualization
+        </button>
       </CardContent>
     </Card>
     <div className="mt-6" />
@@ -246,12 +244,12 @@ export default function NumbersPage() {
         <div>
           <CardTitle>Irrational Numbers</CardTitle>
           <CardDescription>
-            Numbers that cannot be expressed as fractions (π, √2, e, ...)
+            Numbers which cannot be expressed as fractions
           </CardDescription>
         </div>
         <button 
           onClick={() => startAnimation('irrational')}
-          className="w-12 h-12 rounded-full border-2 border-black bg-yellow-500 text-black font-bold flex items-center justify-center hover:bg-yellow-600 transition-colors active:scale-95"
+          className="min-w-[48px] w-12 h-12 rounded-full border-2 border-black bg-yellow-500 text-black font-bold flex items-center justify-center hover:bg-yellow-600 transition-colors active:scale-95"
         >
           Go
         </button>
@@ -273,6 +271,44 @@ export default function NumbersPage() {
             </motion.div>
           ))}
         </div>
+        <div className="mt-6" />
+        <button
+          onClick={() => {
+            const modal = document.createElement('div')
+            modal.className = 'fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4'
+            modal.innerHTML = `
+              <div class="bg-white rounded-lg p-4 w-full max-w-4xl max-h-[90vh] overflow-y-auto">
+                <div class="flex justify-end mb-4">
+                  <button class="text-gray-500 hover:text-gray-700" onclick="this.parentElement.parentElement.parentElement.remove()">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                </div>
+                <div id="pi-e-phi-root"></div>
+              </div>
+            `
+            document.body.appendChild(modal)
+            
+            const root = document.getElementById('pi-e-phi-root')
+            if (root) {
+              const visualizer = document.createElement('div')
+              visualizer.id = 'pi-e-phi'
+              root.appendChild(visualizer)
+              
+              // Dynamically import and render the visualizer
+              import('./_components/pi_e_phi').then(module => {
+                const React = require('react')
+                const ReactDOM = require('react-dom')
+                ReactDOM.render(React.createElement(module.default), visualizer)
+              })
+            }
+          }}
+          className="mt-4 px-4 py-2 bg-yellow-500 text-black border-2 border-black rounded-lg hover:bg-yellow-600 transition-colors"
+        >
+          Visualization
+        </button>
+
       </CardContent>
     </Card>
     <div className="mt-6" />
@@ -283,12 +319,12 @@ export default function NumbersPage() {
         <div>
           <CardTitle>Real Numbers</CardTitle>
           <CardDescription>
-            All rational and irrational numbers combined
+            All numbers on the number line, including rational and irrational numbers
           </CardDescription>
         </div>
         <button 
           onClick={() => startAnimation('real')}
-          className="w-12 h-12 rounded-full border-2 border-black bg-yellow-500 text-black font-bold flex items-center justify-center hover:bg-yellow-600 transition-colors active:scale-95"
+          className="min-w-[48px] w-12 h-12 rounded-full border-2 border-black bg-yellow-500 text-black font-bold flex items-center justify-center hover:bg-yellow-600 transition-colors active:scale-95"
         >
           Go
         </button>
