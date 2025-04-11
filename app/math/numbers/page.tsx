@@ -201,9 +201,9 @@ export default function NumbersPage() {
       <button
         onClick={() => {
           const modal = document.createElement('div')
-          modal.className = 'fixed inset-0 bg-black/50 flex items-center justify-center z-50'
+          modal.className = 'fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4'
           modal.innerHTML = `
-            <div class="bg-white rounded-lg p-4 max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+            <div class="bg-white rounded-lg p-4 w-full max-w-4xl max-h-[90vh] overflow-y-auto">
               <div class="flex justify-end mb-4">
                 <button class="text-gray-500 hover:text-gray-700" onclick="this.parentElement.parentElement.parentElement.remove()">
                   <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
