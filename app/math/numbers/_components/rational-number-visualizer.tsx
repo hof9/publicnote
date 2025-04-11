@@ -52,7 +52,7 @@ export default function RationalNumberVisualizer() {
       cells.push(
         <div
           key={i}
-          className={`border border-gray-300 h-10 transition-colors ${
+          className={`border border-gray-300 h-8 min-h-8 transition-colors ${
             isHighlighted ? "bg-yellow-500 hover:bg-yellow-600" : "bg-white hover:bg-gray-100"
           }`}
           title={`${isHighlighted ? rows - i + "/" + rows : ""}`}
@@ -60,29 +60,31 @@ export default function RationalNumberVisualizer() {
       )
     }
 
-    return <div className="grid grid-cols-1 gap-0 w-20 border border-gray-400 rounded overflow-hidden">{cells}</div>
+    return (
+      <div className="grid grid-cols-1 gap-0 w-20 border border-gray-400 rounded overflow-hidden max-h-[40vh] overflow-y-auto">
+        {cells}
+      </div>
+    )
   }
 
   return (
-    <Card className="w-full p-4 sm:p-6">
-      <div className="flex flex-col sm:flex-row gap-4 sm:gap-8 items-center justify-center">
-        <div className="flex flex-col items-center gap-2 w-full sm:w-auto">
-          <div className="text-center mb-2 sm:mb-4">
-            <div className="text-3xl sm:text-4xl font-bold">{numerator}</div>
-            <div className="border-t-2 border-black w-10 sm:w-12 mx-auto my-1"></div>
-            <div className="text-3xl sm:text-4xl font-bold">{denominator}</div>
+    <Card className="w-full max-w-4xl mx-auto p-6 overflow-hidden">
+      <div className="flex flex-col md:flex-row gap-8 items-center justify-center">
+        <div className="flex flex-col items-center gap-2">
+          <div className="text-center mb-4">
+            <div className="text-4xl font-bold">{numerator}</div>
+            <div className="border-t-2 border-black w-12 mx-auto my-1"></div>
+            <div className="text-4xl font-bold">{denominator}</div>
           </div>
 
-          <div className="w-full sm:w-auto flex justify-center">
-            {renderFractionGrid(numerator, denominator)}
-          </div>
+          {renderFractionGrid(numerator, denominator)}
 
           <div className="text-sm text-center mt-2">
             {numerator}/{denominator} = {(numerator / denominator).toFixed(3)}
           </div>
         </div>
 
-        <div className="w-full sm:max-w-xs space-y-4 sm:space-y-6">
+        <div className="w-full max-w-xs space-y-6">
           <div className="space-y-2">
             <Label>Numerator: {numerator}</Label>
             <Slider
@@ -106,7 +108,7 @@ export default function RationalNumberVisualizer() {
           </div>
 
           {simplified.numerator !== numerator || simplified.denominator !== denominator ? (
-            <div className="p-2 sm:p-3 bg-blue-50 rounded-md">
+            <div className="p-3 bg-blue-50 rounded-md">
               <p className="text-sm">
                 This fraction can be simplified to:
                 <span className="font-bold ml-1">
