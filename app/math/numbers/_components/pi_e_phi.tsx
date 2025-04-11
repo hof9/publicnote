@@ -2,39 +2,39 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 
 export default function Home() {
   return (
-    <div className="container mx-auto px-4 py-8 flex items-center justify-center min-h-screen">
-      <div className="grid gap-8 md:grid-cols-3 w-full max-w-6xl">
+    <div className="container mx-auto px-2 py-4 flex items-center justify-center">
+      <div className="grid gap-4 md:grid-cols-3 w-full">
         <Card className="h-full">
-          <CardHeader>
-            <CardTitle>π (Pi)</CardTitle>
-            <CardDescription>The ratio of a circle's circumference to its diameter</CardDescription>
+          <CardHeader className="p-4">
+            <CardTitle className="text-lg">π (Pi)</CardTitle>
+            <CardDescription className="text-sm">The ratio of a circle's circumference to its diameter</CardDescription>
           </CardHeader>
-          <CardContent>
-            <div className="aspect-square rounded-md bg-slate-100 p-4">
+          <CardContent className="p-4">
+            <div className="aspect-square rounded-md bg-slate-100 p-2">
               <PiVisualization />
             </div>
           </CardContent>
         </Card>
 
         <Card className="h-full">
-          <CardHeader>
-            <CardTitle>e (Euler's Number)</CardTitle>
-            <CardDescription>The base of natural logarithms</CardDescription>
+          <CardHeader className="p-4">
+            <CardTitle className="text-lg">e (Euler's Number)</CardTitle>
+            <CardDescription className="text-sm">The base of natural logarithms</CardDescription>
           </CardHeader>
-          <CardContent className="pb-0">
-            <div className="aspect-square rounded-md bg-slate-100 p-4">
+          <CardContent className="p-4">
+            <div className="aspect-square rounded-md bg-slate-100 p-2">
               <EVisualization />
             </div>
           </CardContent>
         </Card>
 
         <Card className="h-full">
-          <CardHeader>
-            <CardTitle>φ (Phi)</CardTitle>
-            <CardDescription>The golden ratio found throughout nature</CardDescription>
+          <CardHeader className="p-4">
+            <CardTitle className="text-lg">φ (Phi)</CardTitle>
+            <CardDescription className="text-sm">The golden ratio found throughout nature</CardDescription>
           </CardHeader>
-          <CardContent>
-            <div className="aspect-square rounded-md bg-slate-100 p-4">
+          <CardContent className="p-4">
+            <div className="aspect-square rounded-md bg-slate-100 p-2">
               <PhiVisualization />
             </div>
           </CardContent>

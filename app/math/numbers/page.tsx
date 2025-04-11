@@ -272,42 +272,32 @@ export default function NumbersPage() {
           ))}
         </div>
         <div className="mt-6" />
-        <button
-          onClick={() => {
-            const modal = document.createElement('div')
-            modal.className = 'fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4'
-            modal.innerHTML = `
-              <div class="bg-white rounded-lg p-4 w-full max-w-4xl max-h-[90vh] overflow-y-auto">
-                <div class="flex justify-end mb-4">
-                  <button class="text-gray-500 hover:text-gray-700" onclick="this.parentElement.parentElement.parentElement.remove()">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                  </button>
-                </div>
-                <div id="pi-e-phi-root"></div>
-              </div>
-            `
-            document.body.appendChild(modal)
-            
-            const root = document.getElementById('pi-e-phi-root')
-            if (root) {
-              const visualizer = document.createElement('div')
-              visualizer.id = 'pi-e-phi'
-              root.appendChild(visualizer)
-              
-              // Dynamically import and render the visualizer
-              import('./_components/pi_e_phi').then(module => {
-                const React = require('react')
-                const ReactDOM = require('react-dom')
-                ReactDOM.render(React.createElement(module.default), visualizer)
-              })
+      <button
+        onClick={() => {
+          const modal = document.createElement('div')
+          modal.className = 'fixed inset-0 bg-black/50 flex items-center justify-center z-50'
+          modal.onclick = (e) => {
+            if (e.target === modal) {
+              modal.remove()
             }
-          }}
-          className="mt-4 px-4 py-2 bg-yellow-500 text-black border-2 border-black rounded-lg hover:bg-yellow-600 transition-colors"
-        >
-          Visualization
-        </button>
+          }
+          document.body.appendChild(modal)
+          
+          const content = document.createElement('div')
+          content.className = 'bg-white rounded-lg p-4 max-w-4xl w-full max-h-[90vh] overflow-auto'
+          modal.appendChild(content)
+          
+          import('./_components/pi_e_phi').then(module => {
+            const React = require('react')
+            const ReactDOM = require('react-dom')
+            ReactDOM.render(React.createElement(module.default), content)
+          })
+        }}
+        className="mt-4 px-4 py-2 bg-yellow-500 text-black border-2 border-black rounded-lg hover:bg-yellow-600 transition-colors"
+      >
+        Special Numbers
+      </button>
+
 
       </CardContent>
     </Card>
