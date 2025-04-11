@@ -9,7 +9,7 @@ export default function RationalNumberVisualizer() {
   const [numerator, setNumerator] = useState(1)
   const [denominator, setDenominator] = useState(4)
   const [simplified, setSimplified] = useState({ numerator: 0, denominator: 0 })
-  const maxDenominator = 12
+  const maxValue = 8
 
   // Calculate GCD for simplification
   const calculateGCD = (a: number, b: number): number => {
@@ -25,16 +25,26 @@ export default function RationalNumberVisualizer() {
     })
   }, [numerator, denominator])
 
+  // Initialize with values capped at maxValue
+  useEffect(() => {
+    if (denominator > maxValue) {
+      setDenominator(maxValue)
+    }
+    if (numerator > maxValue) {
+      setNumerator(maxValue)
+    }
+  }, [])
+
   // Handle numerator change
   const handleNumeratorChange = (value: number) => {
-    if (value > 0 && value <= denominator) {
+    if (value > 0 && value <= Math.min(denominator, maxValue)) {
       setNumerator(value)
     }
   }
 
   // Handle denominator change
   const handleDenominatorChange = (value: number) => {
-    if (value > 0 && value <= maxDenominator) {
+    if (value > 0 && value <= maxValue) {
       setDenominator(value)
       if (numerator > value) {
         setNumerator(value)
@@ -45,7 +55,7 @@ export default function RationalNumberVisualizer() {
   // Render fraction grid
   const renderFractionGrid = (num: number, denom: number) => {
     const cells = []
-    const rows = Math.min(denom, maxDenominator)
+    const rows = Math.min(denom, maxValue)
 
     for (let i = 0; i < rows; i++) {
       const isHighlighted = i >= rows - num
@@ -90,7 +100,7 @@ export default function RationalNumberVisualizer() {
             <Slider
               value={[numerator]}
               min={1}
-              max={denominator}
+              max={Math.min(denominator, maxValue)}
               step={1}
               onValueChange={(values) => handleNumeratorChange(values[0])}
             />
@@ -101,7 +111,7 @@ export default function RationalNumberVisualizer() {
             <Slider
               value={[denominator]}
               min={1}
-              max={maxDenominator}
+              max={maxValue}
               step={1}
               onValueChange={(values) => handleDenominatorChange(values[0])}
             />
