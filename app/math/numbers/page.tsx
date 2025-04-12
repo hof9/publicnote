@@ -4,6 +4,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { motion } from "framer-motion"
 import { useEffect, useState } from "react"
 import { playPlasticButtonSound } from "../../utils/sounds"
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog"
+import PiEPhi from "./_components/pi_e_phi"
 
 type NumberType = 'natural' | 'whole' | 'integer' | 'rational' | 'irrational' | 'real'
 
@@ -272,31 +274,16 @@ export default function NumbersPage() {
           ))}
         </div>
         <div className="mt-6" />
-      <button
-        onClick={() => {
-          const modal = document.createElement('div')
-          modal.className = 'fixed inset-0 bg-black/50 flex items-center justify-center z-50'
-          modal.onclick = (e) => {
-            if (e.target === modal) {
-              modal.remove()
-            }
-          }
-          document.body.appendChild(modal)
-          
-          const content = document.createElement('div')
-          content.className = 'bg-white rounded-lg p-4 max-w-4xl w-full max-h-[90vh] overflow-auto'
-          modal.appendChild(content)
-          
-          import('./_components/pi_e_phi').then(module => {
-            const React = require('react')
-            const ReactDOM = require('react-dom')
-            ReactDOM.render(React.createElement(module.default), content)
-          })
-        }}
-        className="mt-4 px-4 py-2 bg-yellow-500 text-black border-2 border-black rounded-lg hover:bg-yellow-600 transition-colors"
-      >
-        Special Numbers
-      </button>
+      <Dialog>
+        <DialogTrigger asChild>
+          <button className="mt-4 px-4 py-2 bg-yellow-500 text-black border-2 border-black rounded-lg hover:bg-yellow-600 transition-colors">
+            Special Numbers
+          </button>
+        </DialogTrigger>
+        <DialogContent className="max-w-4xl">
+          <PiEPhi />
+        </DialogContent>
+      </Dialog>
 
 
       </CardContent>
