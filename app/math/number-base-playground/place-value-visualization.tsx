@@ -244,7 +244,9 @@ export default function PlaceValueVisualization() {
               </span>
             </div>
             <div
-              ref={(el) => (containerRefs.current[index] = el)}
+              ref={(el) => {
+                containerRefs.current[index] = el
+              }}
               className={`border-gray-800 border-2 rounded-md w-full h-96 mb-2 bg-white relative overflow-hidden ${
                 isPlaceValueAtMax(index) ? "cursor-not-allowed" : "cursor-pointer"
               }`}
