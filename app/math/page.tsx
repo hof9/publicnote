@@ -42,7 +42,15 @@ export default function MathPage() {
           className="p-4 bg-black-50 rounded-lg shadow-md hover:shadow-lg transition-shadow border-2 border-black-200"
         > 
           <div className="flex items-center gap-2">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="rgb(234 179 8)" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="lucide lucide-square-asterisk-icon lucide-square-asterisk"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M12 8v8"/><path d="m8.5 14 7-4"/><path d="m8.5 10 7 4"/></svg>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="rgb(234 179 8)" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="lucide lucide-square-icon lucide-square">
+            <rect width="18" height="18" x="3" y="3" rx="2"/>
+            <circle cx="8" cy="8" r="2" fill="black"/>
+            <circle cx="16" cy="8" r="2" fill="black"/>
+            <circle cx="8" cy="16" r="2" fill="black"/>
+            <circle cx="16" cy="16" r="2" fill="black"/>
+            <path d="M12 8v8" stroke="black" stroke-width="2"/>
+            <path d="M8 12h8" stroke="black" stroke-width="2"/>
+          </svg>
           <h2 className="text-xl font-semibold text-black-800">Number Visualization</h2>
           </div>
        </Link>
@@ -83,6 +91,16 @@ export default function MathPage() {
             <text x="12" y="16" text-anchor="middle" font-size="12" fill="black">+</text>
           </svg>
             <h2 className="text-xl font-semibold text-black-800">Basic Math Flashcards</h2>
+          </div>
+        </Link>
+        <Link href="/math/number-base-playground" className="p-4 bg-black-50 rounded-lg shadow-md hover:shadow-lg transition-shadow border-2 border-black-200">
+          <div className="flex items-center gap-2">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="rgb(234 179 8)" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="lucide lucide-square-icon lucide-square">
+            <rect width="18" height="18" x="3" y="3" rx="2"/>
+            <text x="12" y="16" text-anchor="middle" font-size="12" fill="black">2</text>
+            <text x="12" y="16" text-anchor="middle" font-size="12" fill="black" dx="8">ₓ</text>
+          </svg>
+            <h2 className="text-xl font-semibold text-black-800">Number Base Playground</h2>
           </div>
         </Link>
       </div>
