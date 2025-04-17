@@ -13,9 +13,9 @@ export default function DevPage() {
 
         {/* Add some link placeholders here. */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <Link href="/dev/linkone" className="p-6 border rounded-lg hover:bg-gray-50 transition-colors">
-            <h3 className="text-xl font-medium mb-2">Link one</h3>
-            <p className="text-gray-600">text description</p>
+          <Link href="/dev/weather-mcp" className="p-6 border rounded-lg hover:bg-gray-50 transition-colors">
+            <h3 className="text-xl font-medium mb-2">Weather MCP</h3>
+            <p className="text-gray-600">A weather monitoring and control panel for tracking and analyzing weather data.</p>
           </Link>
           <Link href="/dev/linktwo" className="p-6 border rounded-lg hover:bg-gray-50 transition-colors">
             <h3 className="text-xl font-medium mb-2">Link two</h3>
