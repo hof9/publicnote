@@ -103,6 +103,15 @@ export default function MathPage() {
             <h2 className="text-xl font-semibold text-black-800">Number Base Playground</h2>
           </div>
         </Link>
+        <Link href="/math/picks-theorem" className="p-4 bg-black-50 rounded-lg shadow-md hover:shadow-lg transition-shadow border-2 border-black-200">
+          <div className="flex items-center gap-2">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="rgb(234 179 8)" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="lucide lucide-square-icon lucide-square">
+            <polygon points="3,3 21,6 18,21 6,18" />
+          </svg>
+            <h2 className="text-xl font-semibold text-black-800">Picks Theorem</h2>
+          </div>
+        </Link>
+
       </div>
     </motion.div>
   )
