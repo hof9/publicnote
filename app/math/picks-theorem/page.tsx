@@ -776,8 +776,16 @@ export default function PicksTheoremVisualizer() {
                       className="fill-yellow-500 fill-opacity-50"
                     />
                     <line
-                      x1={(dragging?.active ? vertices[dragging.index].x : draggingBoundary?.point.x) * CELL_SIZE}
-                      y1={(dragging?.active ? vertices[dragging.index].y : draggingBoundary?.point.y) * CELL_SIZE}
+                      x1={(
+                        dragging?.active && dragging.index !== undefined
+                          ? vertices[dragging.index].x
+                          : draggingBoundary?.point?.x ?? 0
+                      ) * CELL_SIZE}
+                      y1={(
+                        dragging?.active && dragging.index !== undefined
+                          ? vertices[dragging.index].y
+                          : draggingBoundary?.point?.y ?? 0
+                      ) * CELL_SIZE}
                       x2={positionIndicator.x * CELL_SIZE}
                       y2={positionIndicator.y * CELL_SIZE}
                       className="stroke-yellow-500 stroke-dashed stroke-1 opacity-50"
