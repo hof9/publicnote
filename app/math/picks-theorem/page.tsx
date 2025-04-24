@@ -991,25 +991,27 @@ export default function PicksTheoremVisualizer() {
 
                     {/* Boundary points */}
                     <circle cx={40} cy={40} r={5} className="fill-black" />
+                    <circle cx={80} cy={40} r={5} className="fill-black" />
+                    <circle cx={120} cy={40} r={5} className="fill-black" />
                     <circle cx={160} cy={40} r={5} className="fill-black" />
+                    <circle cx={40} cy={80} r={5} className="fill-black" />
+                    <circle cx={40} cy={120} r={5} className="fill-black" />
                     <circle cx={40} cy={160} r={5} className="fill-black" />
+                    <circle cx={80} cy={80} r={5} className="fill-black" />
+                    <circle cx={120} cy={80} r={5} className="fill-black" />
 
                     {/* Interior points */}
-                    <circle cx={60} cy={60} r={4} className="fill-gray-600" />
-                    <circle cx={80} cy={60} r={4} className="fill-gray-600" />
-                    <circle cx={100} cy={60} r={4} className="fill-gray-600" />
-                    <circle cx={120} cy={60} r={4} className="fill-gray-600" />
-                    <circle cx={60} cy={80} r={4} className="fill-gray-600" />
+                    <circle cx={80} cy={80} r={4} className="fill-gray-600" />
                   </svg>
 
                   <div className="mt-4 text-center">
                     <p className="text-gray-700">
-                      <strong>Boundary points (b):</strong> 3
+                      <strong>Boundary points (b):</strong> 9
                     </p>
                     <p className="text-gray-700">
-                      <strong>Interior points (i):</strong> 5
+                      <strong>Interior points (i):</strong> 1
                     </p>
-                    <p className="text-gray-700 font-medium mt-2">Area = 5 + 3/2 - 1 = 5 + 1.5 - 1 = 5.5</p>
+                    <p className="text-gray-700 font-medium mt-2">Area = 1 + 9/2 - 1 = 1 + 4.5 - 1 = 4.5</p>
                   </div>
                 </div>
               </div>
