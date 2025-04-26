@@ -33,10 +33,30 @@ export default function PicksTheoremVisualizer() {
 
   const GRID_SIZE = 11
   const GRID_PADDING = 10
-  const CELL_SIZE = (Math.min(500, window.innerWidth * 0.8) - 2 * GRID_PADDING) / (GRID_SIZE - 1)
-  const GRID_WIDTH = Math.min(500, window.innerWidth * 0.8)
-  const GRID_HEIGHT = Math.min(500, window.innerWidth * 0.8)
+  const DEFAULT_GRID_SIZE = 500
+  const [gridDimensions, setGridDimensions] = useState({
+    width: DEFAULT_GRID_SIZE,
+    height: DEFAULT_GRID_SIZE,
+    cellSize: (DEFAULT_GRID_SIZE - 2 * GRID_PADDING) / (GRID_SIZE - 1)
+  })
   const POINT_RADIUS = 4
+
+  useEffect(() => {
+    const updateGridDimensions = () => {
+      const maxWidth = Math.min(500, window.innerWidth * 0.8)
+      setGridDimensions({
+        width: maxWidth,
+        height: maxWidth,
+        cellSize: (maxWidth - 2 * GRID_PADDING) / (GRID_SIZE - 1)
+      })
+    }
+
+    updateGridDimensions()
+    window.addEventListener('resize', updateGridDimensions)
+    return () => window.removeEventListener('resize', updateGridDimensions)
+  }, [])
+
+  const { width: GRID_WIDTH, height: GRID_HEIGHT, cellSize: CELL_SIZE } = gridDimensions
 
   // Calculate GCD for boundary points
   const gcd = (a: number, b: number): number => {
