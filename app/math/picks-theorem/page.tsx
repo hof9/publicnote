@@ -33,9 +33,9 @@ export default function PicksTheoremVisualizer() {
 
   const GRID_SIZE = 11
   const GRID_PADDING = 10
-  const CELL_SIZE = (500 - 2 * GRID_PADDING) / (GRID_SIZE - 1)
-  const GRID_WIDTH = 500
-  const GRID_HEIGHT = 500
+  const CELL_SIZE = (Math.min(500, window.innerWidth * 0.8) - 2 * GRID_PADDING) / (GRID_SIZE - 1)
+  const GRID_WIDTH = Math.min(500, window.innerWidth * 0.8)
+  const GRID_HEIGHT = Math.min(500, window.innerWidth * 0.8)
   const POINT_RADIUS = 4
 
   // Calculate GCD for boundary points
@@ -651,11 +651,11 @@ export default function PicksTheoremVisualizer() {
       : ""
 
   return (
-    <div className="flex flex-col md:flex-row min-h-screen bg-gray-50 p-4">
+    <div className="flex flex-col md:flex-row min-h-screen bg-gray-50 p-2 sm:p-4">
       <div className="flex flex-col items-center w-full">
-        <h1 className="text-4xl font-bold text-yellow-500 mb-8">Pick's Theorem Visualization</h1>
+        <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-yellow-500 mb-4 sm:mb-8 text-center">Pick's Theorem Visualization</h1>
 
-        <div className="flex flex-col md:flex-row w-full max-w-6xl gap-6">
+        <div className="flex flex-col md:flex-row w-full max-w-6xl gap-4 sm:gap-6">
           {/* Grid and Polygon */}
           <div className="flex-1 flex justify-center items-center">
             <div className="relative">
@@ -733,29 +733,29 @@ export default function PicksTheoremVisualizer() {
           </div>
 
           {/* Sidebar with calculations */}
-          <div className="w-full md:w-80 bg-white p-6 rounded-lg shadow-md flex flex-col gap-6">
+          <div className="w-full md:w-80 bg-white p-4 sm:p-6 rounded-lg shadow-md flex flex-col gap-4 sm:gap-6">
             <div>
-              <h2 className="text-2xl font-bold text-gray-900 mb-6">Pick's Theorem</h2>
+              <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4 sm:mb-6">Pick's Theorem</h2>
 
-              <div className="space-y-4">
-                <div className="border-b border-gray-200 pb-3">
+              <div className="space-y-3 sm:space-y-4">
+                <div className="border-b border-gray-200 pb-2 sm:pb-3">
                   <h3 className="text-sm font-medium text-gray-500 mb-1">Boundary Points (b)</h3>
-                  <p className="text-2xl font-bold text-gray-900">{boundaryPoints}</p>
+                  <p className="text-xl sm:text-2xl font-bold text-gray-900">{boundaryPoints}</p>
                 </div>
 
-                <div className="border-b border-gray-200 pb-3">
+                <div className="border-b border-gray-200 pb-2 sm:pb-3">
                   <h3 className="text-sm font-medium text-gray-500 mb-1">Interior Points (i)</h3>
-                  <p className="text-2xl font-bold text-gray-900">{interiorPoints}</p>
+                  <p className="text-xl sm:text-2xl font-bold text-gray-900">{interiorPoints}</p>
                 </div>
 
-                <div className="border-b border-gray-200 pb-3">
+                <div className="border-b border-gray-200 pb-2 sm:pb-3">
                   <h3 className="text-sm font-medium text-gray-500 mb-1">Area</h3>
-                  <p className="text-2xl font-bold text-gray-900">{area > 0 ? area.toFixed(2) : "0"}</p>
+                  <p className="text-xl sm:text-2xl font-bold text-gray-900">{area > 0 ? area.toFixed(2) : "0"}</p>
                 </div>
 
                 {isPolygonClosed && vertices.length >= 3 && (
                   <div className="pt-2">
-                    <p className="text-gray-600">A = i + b/2 - 1</p>
+                    <p className="text-sm sm:text-base text-gray-600">A = i + b/2 - 1</p>
                   </div>
                 )}
               </div>
@@ -764,28 +764,28 @@ export default function PicksTheoremVisualizer() {
             {!isPolygonClosed && vertices.length > 2 && (
               <button
                 onClick={handleCompletePolygon}
-                className="w-full mt-4 py-2 px-4 bg-yellow-500 hover:bg-yellow-600 text-white rounded-lg transition-colors"
+                className="w-full mt-2 sm:mt-4 py-2 px-4 bg-yellow-500 hover:bg-yellow-600 text-white rounded-lg transition-colors text-sm sm:text-base"
               >
                 Complete Polygon
               </button>
             )}
 
             {statusMessage && (
-              <div className="mt-4 p-2 bg-gray-100 rounded-lg text-center">
-                <p className="text-sm font-medium text-gray-700">{statusMessage}</p>
+              <div className="mt-2 sm:mt-4 p-2 bg-gray-100 rounded-lg text-center">
+                <p className="text-xs sm:text-sm font-medium text-gray-700">{statusMessage}</p>
               </div>
             )}
 
             <div className="flex gap-2 mt-auto">
               <button
                 onClick={() => setShowModal(true)}
-                className="flex-1 py-2 px-4 bg-gray-800 hover:bg-gray-900 text-white rounded-lg transition-colors"
+                className="flex-1 py-2 px-4 bg-gray-800 hover:bg-gray-900 text-white rounded-lg transition-colors text-sm sm:text-base"
               >
                 Learn Pick's Theorem
               </button>
               <button
                 onClick={handleClearGrid}
-                className="flex-1 py-2 px-4 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-lg transition-colors flex items-center justify-center gap-2"
+                className="flex-1 py-2 px-4 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-lg transition-colors flex items-center justify-center gap-2 text-sm sm:text-base"
               >
                 <Trash2 className="w-4 h-4" />
                 Clear Grid
@@ -794,7 +794,7 @@ export default function PicksTheoremVisualizer() {
 
             <button
               onClick={createExampleTriangle}
-              className="w-full py-2 px-4 bg-gray-100 hover:bg-gray-200 text-gray-800 rounded-lg transition-colors"
+              className="w-full py-2 px-4 bg-gray-100 hover:bg-gray-200 text-gray-800 rounded-lg transition-colors text-sm sm:text-base"
             >
               Create Example
             </button>
@@ -804,10 +804,10 @@ export default function PicksTheoremVisualizer() {
 
       {/* Educational Modal */}
       {showModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-2 sm:p-4 z-50">
           <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="flex justify-between items-center p-6 border-b">
-              <h2 className="text-2xl font-bold text-gray-900">Learn Pick's Theorem</h2>
+            <div className="flex justify-between items-center p-4 sm:p-6 border-b">
+              <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Learn Pick's Theorem</h2>
               <button
                 onClick={() => setShowModal(false)}
                 className="p-2 rounded-full hover:bg-gray-100 transition-colors"
@@ -817,20 +817,20 @@ export default function PicksTheoremVisualizer() {
               </button>
             </div>
 
-            <div className="p-6 space-y-4">
-              <p className="text-gray-700">
+            <div className="p-4 sm:p-6 space-y-3 sm:space-y-4">
+              <p className="text-sm sm:text-base text-gray-700">
                 Pick's Theorem calculates the area of a polygon with vertices on a lattice grid using the formula:
               </p>
 
-              <div className="flex justify-center my-4">
-                <div className="bg-gray-100 px-6 py-3 rounded-lg">
-                  <p className="text-xl text-gray-900 font-medium">A = i + b/2 - 1</p>
+              <div className="flex justify-center my-3 sm:my-4">
+                <div className="bg-gray-100 px-4 sm:px-6 py-2 sm:py-3 rounded-lg">
+                  <p className="text-lg sm:text-xl text-gray-900 font-medium">A = i + b/2 - 1</p>
                 </div>
               </div>
 
-              <p className="text-gray-700">Where:</p>
+              <p className="text-sm sm:text-base text-gray-700">Where:</p>
 
-              <ul className="list-disc pl-6 space-y-2 text-gray-700">
+              <ul className="list-disc pl-4 sm:pl-6 space-y-1 sm:space-y-2 text-sm sm:text-base text-gray-700">
                 <li>
                   <strong>A</strong> is the area of the polygon
                 </li>
@@ -844,10 +844,10 @@ export default function PicksTheoremVisualizer() {
                 </li>
               </ul>
 
-              <div className="mt-6">
-                <h3 className="text-lg font-semibold text-gray-900 mb-3">Example</h3>
+              <div className="mt-4 sm:mt-6">
+                <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-2 sm:mb-3">Example</h3>
 
-                <div className="bg-gray-50 p-4 rounded-lg flex flex-col items-center">
+                <div className="bg-gray-50 p-3 sm:p-4 rounded-lg flex flex-col items-center">
                   <svg width="200" height="200" viewBox="0 0 125 100" className="border border-gray-300 bg-white">
                     {/* Grid lines */}
                     <g className="stroke-gray-200">
