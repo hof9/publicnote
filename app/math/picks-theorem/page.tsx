@@ -27,16 +27,16 @@ export default function PicksTheoremVisualizer() {
   const [selectedVertex, setSelectedVertex] = useState<number | null>(null)
   const [hoverVertex, setHoverVertex] = useState<number | null>(null)
   const [hoverFirstVertex, setHoverFirstVertex] = useState(false)
-  const [editMode, setEditMode] = useState<"add" | "delete" | "move">("add")
   const [statusMessage, setStatusMessage] = useState<string>("")
   const [positionIndicator, setPositionIndicator] = useState<Point | null>(null)
   const [hoveredBoundaryPoint, setHoveredBoundaryPoint] = useState<Point | null>(null)
 
-  const GRID_SIZE = 10
-  const CELL_SIZE = 50
+  const GRID_SIZE = 11
+  const GRID_PADDING = 10
+  const CELL_SIZE = (500 - 2 * GRID_PADDING) / (GRID_SIZE - 1)
+  const GRID_WIDTH = 500
+  const GRID_HEIGHT = 500
   const POINT_RADIUS = 4
-  const GRID_WIDTH = GRID_SIZE * CELL_SIZE
-  const GRID_HEIGHT = GRID_SIZE * CELL_SIZE
 
   // Calculate GCD for boundary points
   const gcd = (a: number, b: number): number => {
@@ -81,21 +81,17 @@ export default function PicksTheoremVisualizer() {
   const wouldCreateIntersection = (newPoint: Point): boolean => {
     if (vertices.length < 3) return false
 
+    // Only check for intersections if we're closing the polygon
+    if (vertices.length > 2 && newPoint.x === vertices[0].x && newPoint.y === vertices[0].y) {
+      return false
+    }
+
     // Check if the new edge would intersect with any existing edge
     const lastVertex = vertices[vertices.length - 1]
 
     for (let i = 0; i < vertices.length - 1; i++) {
       if (doLinesIntersect(lastVertex, newPoint, vertices[i], vertices[i + 1])) {
         return true
-      }
-    }
-
-    // Check if closing the polygon would create an intersection
-    if (vertices.length > 2) {
-      for (let i = 1; i < vertices.length - 1; i++) {
-        if (doLinesIntersect(newPoint, vertices[0], vertices[i], vertices[i + 1])) {
-          return true
-        }
       }
     }
 
@@ -250,36 +246,27 @@ export default function PicksTheoremVisualizer() {
   const handleVertexClick = (index: number, e: React.MouseEvent) => {
     e.stopPropagation()
 
-    if (editMode === "delete") {
-      // Delete the vertex
-      if (vertices.length <= 3 && isPolygonClosed) {
-        setStatusMessage("Cannot delete: Polygon needs at least 3 vertices")
-        setTimeout(() => setStatusMessage(""), 2000)
-        return
-      }
-
-      const newVertices = [...vertices]
-      newVertices.splice(index, 1)
-      setVertices(newVertices)
-
-      // If we deleted the last vertex and the polygon was closed, open it
-      if (newVertices.length < 3 && isPolygonClosed) {
-        setIsPolygonClosed(false)
-      }
-
-      setStatusMessage("Vertex deleted")
-      setTimeout(() => setStatusMessage(""), 1000)
-    } else {
-      setSelectedVertex(index)
+    if (vertices.length <= 3 && isPolygonClosed) {
+      setStatusMessage("Cannot delete: Polygon needs at least 3 vertices")
+      setTimeout(() => setStatusMessage(""), 2000)
+      return
     }
+
+    const newVertices = [...vertices]
+    newVertices.splice(index, 1)
+    setVertices(newVertices)
+
+    // If we deleted the last vertex and the polygon was closed, open it
+    if (newVertices.length < 3 && isPolygonClosed) {
+      setIsPolygonClosed(false)
+    }
+
+    setStatusMessage("Vertex deleted")
+    setTimeout(() => setStatusMessage(""), 1000)
   }
 
   // Handle edge click for adding new points
   const handleEdgeClick = (e: React.MouseEvent, startIdx: number) => {
-    if (editMode !== "add" || !isPolygonClosed) return
-
-    e.stopPropagation()
-
     if (!gridRef.current) return
 
     const rect = gridRef.current.getBoundingClientRect()
@@ -324,27 +311,12 @@ export default function PicksTheoremVisualizer() {
     setTimeout(() => setStatusMessage(""), 1000)
   }
 
-  // Reset selection when clicking on the grid
-  const handleGridClick = (x: number, y: number) => {
-    setSelectedVertex(null)
-    handlePointClick(x, y)
-  }
-
-  // Change edit mode
-  const changeEditMode = (mode: "add" | "delete" | "move") => {
-    setEditMode(mode)
-    setSelectedVertex(null)
-  }
-
   // Handle grid point click
   const handlePointClick = (x: number, y: number) => {
-    // If in delete mode, don't add points
-    if (editMode === "delete") return
-
     const newPoint = { x, y }
 
-    // If polygon is already closed and in add mode, start a new one
-    if (isPolygonClosed && editMode === "add") {
+    // If polygon is already closed, start a new one
+    if (isPolygonClosed) {
       setVertices([newPoint])
       setIsPolygonClosed(false)
       return
@@ -369,148 +341,97 @@ export default function PicksTheoremVisualizer() {
       return
     }
 
-    // Only add points if in add mode and polygon is not closed
-    if (editMode === "add" && !isPolygonClosed) {
+    // Only add points if polygon is not closed
+    if (!isPolygonClosed) {
       setVertices([...vertices, newPoint])
     }
   }
 
-  // Handle mouse down on a vertex for dragging
+  // Handle grid click for adding vertices anywhere
+  const handleGridClick = (e: React.MouseEvent) => {
+    if (!gridRef.current) return
+
+    const rect = gridRef.current.getBoundingClientRect()
+    const x = (e.clientX - rect.left) / CELL_SIZE
+    const y = (e.clientY - rect.top) / CELL_SIZE
+
+    // Always round to nearest grid point
+    const roundedX = Math.round(x)
+    const roundedY = Math.round(y)
+
+    // Ensure coordinates are within grid bounds
+    const boundedX = Math.max(0, Math.min(GRID_SIZE - 1, roundedX))
+    const boundedY = Math.max(0, Math.min(GRID_SIZE - 1, roundedY))
+
+    handlePointClick(boundedX, boundedY)
+  }
+
+  // Handle vertex mouse down for dragging
   const handleVertexMouseDown = (index: number, e: React.MouseEvent) => {
     e.stopPropagation()
-    if (editMode === "move") {
+    if (vertices.length > 3 && isPolygonClosed) {
       setDragging({ index, active: true })
       setStatusMessage("Dragging vertex")
     }
   }
 
-  // Handle mouse down on a boundary point for dragging
-  const handleBoundaryMouseDown = (point: Point, segmentIndex: number, e: React.MouseEvent) => {
-    e.stopPropagation()
-    e.preventDefault()
-    if (editMode === "move") {
-      setDraggingBoundary({ point, active: true, segmentIndex })
-      setStatusMessage("Dragging boundary point")
-    }
-  }
-
-  const handleBoundaryMouseEnter = (point: Point) => {
-    if (editMode === "move") {
-      setHoveredBoundaryPoint(point)
-    }
-  }
-
-  const handleBoundaryMouseLeave = () => {
-    setHoveredBoundaryPoint(null)
-  }
-
-  // Handle mouse move for dragging vertices and boundary points
+  // Handle mouse move for dragging vertices
   const handleMouseMove = (e: React.MouseEvent) => {
-    if (!gridRef.current) return
+    if (!gridRef.current || !dragging?.active) return
 
     const rect = gridRef.current.getBoundingClientRect()
-    const x = Math.round((e.clientX - rect.left) / CELL_SIZE)
-    const y = Math.round((e.clientY - rect.top) / CELL_SIZE)
+    const x = (e.clientX - rect.left) / CELL_SIZE
+    const y = (e.clientY - rect.top) / CELL_SIZE
+
+    // Always round to nearest grid point
+    const roundedX = Math.round(x)
+    const roundedY = Math.round(y)
 
     // Ensure coordinates are within grid bounds
-    const boundedX = Math.max(0, Math.min(GRID_SIZE - 1, x))
-    const boundedY = Math.max(0, Math.min(GRID_SIZE - 1, y))
+    const boundedX = Math.max(0, Math.min(GRID_SIZE - 1, roundedX))
+    const boundedY = Math.max(0, Math.min(GRID_SIZE - 1, roundedY))
 
-    // Show position indicator when in move mode
-    if (editMode === "move" && (dragging?.active || draggingBoundary?.active)) {
-      setPositionIndicator({ x: boundedX, y: boundedY })
-    } else {
-      setPositionIndicator(null)
+    // Update position indicator
+    setPositionIndicator({ x: boundedX, y: boundedY })
+
+    // Skip if position hasn't changed
+    if (vertices[dragging.index].x === boundedX && vertices[dragging.index].y === boundedY) {
+      return
     }
 
-    // Handle vertex dragging
-    if (editMode === "move" && dragging?.active) {
-      // Skip if position hasn't changed
-      if (vertices[dragging.index].x === boundedX && vertices[dragging.index].y === boundedY) {
-        return
-      }
+    // Create a new vertices array with the updated position
+    const newVertices = [...vertices]
+    newVertices[dragging.index] = { x: boundedX, y: boundedY }
 
-      // Create a new vertices array with the updated position
-      const newVertices = [...vertices]
-      newVertices[dragging.index] = { x: boundedX, y: boundedY }
+    // Check for self-intersection
+    let willIntersect = false
+    const idx = dragging.index
 
-      // Check for self-intersection
-      let willIntersect = false
-      const idx = dragging.index
+    if (vertices.length > 3 && isPolygonClosed) {
+      const prev = (idx - 1 + vertices.length) % vertices.length
+      const next = (idx + 1) % vertices.length
 
-      if (vertices.length > 3 && isPolygonClosed) {
-        const prev = (idx - 1 + vertices.length) % vertices.length
-        const next = (idx + 1) % vertices.length
-
-        // Check if moving the vertex would create intersections
-        for (let i = 0; i < vertices.length; i++) {
-          const j = (i + 1) % vertices.length
-          if (i !== prev && j !== idx && i !== idx && j !== prev) {
-            if (doLinesIntersect(newVertices[idx], newVertices[prev], vertices[i], vertices[j])) {
-              willIntersect = true
-              break
-            }
-          }
-
-          if (i !== idx && j !== next && i !== next && j !== idx) {
-            if (doLinesIntersect(newVertices[idx], newVertices[next], vertices[i], vertices[j])) {
-              willIntersect = true
-              break
-            }
+      // Check if moving the vertex would create intersections
+      for (let i = 0; i < vertices.length; i++) {
+        const j = (i + 1) % vertices.length
+        if (i !== prev && j !== idx && i !== idx && j !== prev) {
+          if (doLinesIntersect(newVertices[idx], newVertices[prev], vertices[i], vertices[j])) {
+            willIntersect = true
+            break
           }
         }
-      }
 
-      if (!willIntersect) {
-        setVertices(newVertices)
-      }
-    }
-
-    // Handle boundary point dragging - completely rewritten for reliability
-    else if (editMode === "move" && draggingBoundary?.active && isPolygonClosed) {
-      const newPoint = { x: boundedX, y: boundedY }
-
-      // Skip if position hasn't changed
-      if (draggingBoundary.point.x === boundedX && draggingBoundary.point.y === boundedY) {
-        return
-      }
-
-      const segmentIndex = draggingBoundary.segmentIndex
-      const startVertex = vertices[segmentIndex]
-      const endVertex = vertices[(segmentIndex + 1) % vertices.length]
-
-      // Create a new vertices array with the new point inserted
-      const newVertices = [...vertices]
-      newVertices.splice(segmentIndex + 1, 0, newPoint)
-
-      // Check for self-intersection
-      let willIntersect = false
-
-      if (vertices.length > 2) {
-        // Check if the new segments would intersect with any non-adjacent segments
-        for (let i = 0; i < vertices.length; i++) {
-          const j = (i + 1) % vertices.length
-
-          // Skip checking against the segments we're modifying
-          if (i === segmentIndex || j === (segmentIndex + 1) % vertices.length) continue
-
-          // Check both new segments for intersection
-          if (
-            doLinesIntersect(startVertex, newPoint, vertices[i], vertices[j]) ||
-            doLinesIntersect(newPoint, endVertex, vertices[i], vertices[j])
-          ) {
+        if (i !== idx && j !== next && i !== next && j !== idx) {
+          if (doLinesIntersect(newVertices[idx], newVertices[next], vertices[i], vertices[j])) {
             willIntersect = true
             break
           }
         }
       }
+    }
 
-      if (!willIntersect) {
-        setVertices(newVertices)
-        // Update the dragging state to reflect the new vertex index
-        setDraggingBoundary(null)
-        setDragging({ index: segmentIndex + 1, active: true })
-      }
+    if (!willIntersect) {
+      setVertices(newVertices)
     }
   }
 
@@ -562,17 +483,144 @@ export default function PicksTheoremVisualizer() {
       gridPoints.push(
         <circle
           key={`point-${x}-${y}`}
-          cx={x * CELL_SIZE}
-          cy={y * CELL_SIZE}
+          cx={x * CELL_SIZE + GRID_PADDING}
+          cy={y * CELL_SIZE + GRID_PADDING}
           r={POINT_RADIUS}
           className={`fill-gray-400 hover:fill-gray-600 transition-all cursor-pointer ${
             isIntersecting ? "animate-pulse" : ""
           }`}
-          onClick={() => handleGridClick(x, y)}
+          onClick={() => handlePointClick(x, y)}
         />,
       )
     }
   }
+
+  // Generate grid lines
+  const gridLines = []
+  for (let y = 0; y < GRID_SIZE; y++) {
+    gridLines.push(
+      <line
+        key={`horiz-${y}`}
+        x1={GRID_PADDING}
+        y1={y * CELL_SIZE + GRID_PADDING}
+        x2={(GRID_SIZE - 1) * CELL_SIZE + GRID_PADDING}
+        y2={y * CELL_SIZE + GRID_PADDING}
+        className="stroke-gray-200"
+      />
+    )
+  }
+  for (let x = 0; x < GRID_SIZE; x++) {
+    gridLines.push(
+      <line
+        key={`vert-${x}`}
+        x1={x * CELL_SIZE + GRID_PADDING}
+        y1={GRID_PADDING}
+        x2={x * CELL_SIZE + GRID_PADDING}
+        y2={(GRID_SIZE - 1) * CELL_SIZE + GRID_PADDING}
+        className="stroke-gray-200"
+      />
+    )
+  }
+  // Add rightmost vertical line
+  gridLines.push(
+    <line
+      key="vert-right"
+      x1={(GRID_SIZE - 1) * CELL_SIZE + GRID_PADDING}
+      y1={GRID_PADDING}
+      x2={(GRID_SIZE - 1) * CELL_SIZE + GRID_PADDING}
+      y2={(GRID_SIZE - 1) * CELL_SIZE + GRID_PADDING}
+      className="stroke-gray-200"
+    />
+  )
+  // Add bottommost horizontal line
+  gridLines.push(
+    <line
+      key="horiz-bottom"
+      x1={GRID_PADDING}
+      y1={(GRID_SIZE - 1) * CELL_SIZE + GRID_PADDING}
+      x2={(GRID_SIZE - 1) * CELL_SIZE + GRID_PADDING}
+      y2={(GRID_SIZE - 1) * CELL_SIZE + GRID_PADDING}
+      className="stroke-gray-200"
+    />
+  )
+
+  // Generate interior points with visual indicators
+  const interiorPointElements = []
+  for (let y = 0; y < GRID_SIZE; y++) {
+    for (let x = 0; x < GRID_SIZE; x++) {
+      const point = { x, y }
+      if (isPointInPolygon(point, vertices) && !isPointOnBoundary(point, boundaryPointsCoords)) {
+        interiorPointElements.push(
+          <g key={`interior-${x}-${y}`}>
+            <circle
+              cx={x * CELL_SIZE + GRID_PADDING}
+              cy={y * CELL_SIZE + GRID_PADDING}
+              r={POINT_RADIUS * 1.5}
+              className="fill-gray-200 stroke-black stroke-2 hover:fill-gray-300 transition-colors"
+            />
+          </g>
+        )
+      }
+    }
+  }
+
+  // Generate boundary points with visual indicators
+  const boundaryPointElements = boundaryPointsCoords.map((point, index) => {
+    const isVertex = vertices.some(v => v.x === point.x && v.y === point.y)
+    return (
+      <g key={`boundary-${index}`}>
+        <circle
+          cx={point.x * CELL_SIZE + GRID_PADDING}
+          cy={point.y * CELL_SIZE + GRID_PADDING}
+          r={POINT_RADIUS * (isVertex ? 2 : 1.5)}
+          className="fill-yellow-500 stroke-black stroke-2 hover:fill-yellow-400 transition-colors"
+          onClick={(e) => {
+            if (index === 0 && vertices.length > 2 && !isPolygonClosed) {
+              setIsPolygonClosed(true)
+              setStatusMessage("Polygon completed")
+              setTimeout(() => setStatusMessage(""), 1000)
+            }
+          }}
+        />
+      </g>
+    )
+  })
+
+  // Generate polygon vertices with selection and hover states
+  const polygonVertices = vertices.map((point, index) => (
+    <g key={`vertex-${index}`}>
+      <circle
+        cx={point.x * CELL_SIZE + GRID_PADDING}
+        cy={point.y * CELL_SIZE + GRID_PADDING}
+        r={POINT_RADIUS * (selectedVertex === index || hoverVertex === index ? 2 : index === 0 && hoverFirstVertex ? 2.5 : 1.5)}
+        className={`
+          ${index === 0 && hoverFirstVertex ? "fill-yellow-500 stroke-black stroke-2 hover:fill-yellow-400" : ""}
+          ${selectedVertex === index ? "fill-yellow-500 stroke-black stroke-2 hover:fill-yellow-400" : "fill-yellow-500 stroke-black stroke-2 hover:fill-yellow-400"} 
+          ${hoverVertex === index ? "stroke-black stroke-2" : ""}
+          cursor-pointer transition-colors duration-150
+        `}
+        onClick={(e) => {
+          if (index === 0 && vertices.length > 2 && !isPolygonClosed) {
+            setIsPolygonClosed(true)
+            setStatusMessage("Polygon completed")
+            setTimeout(() => setStatusMessage(""), 1000)
+          } else {
+            handleVertexClick(index, e)
+          }
+        }}
+        onMouseEnter={() => handleVertexHover(index)}
+        onMouseLeave={() => handleVertexHover(null)}
+      />
+      {selectedVertex === index && (
+        <circle
+          cx={point.x * CELL_SIZE + GRID_PADDING}
+          cy={point.y * CELL_SIZE + GRID_PADDING}
+          r={POINT_RADIUS * 3}
+          className="fill-gray-200 fill-opacity-50"
+        />
+      )}
+    </g>
+  ))
 
   // Generate polygon edges with click areas
   const polygonEdges = []
@@ -588,7 +636,7 @@ export default function PicksTheoremVisualizer() {
       polygonEdges.push(
         <path
           key={`edge-click-${i}`}
-          d={`M ${start.x * CELL_SIZE},${start.y * CELL_SIZE} L ${end.x * CELL_SIZE},${end.y * CELL_SIZE}`}
+          d={`M ${start.x * CELL_SIZE + GRID_PADDING},${start.y * CELL_SIZE + GRID_PADDING} L ${end.x * CELL_SIZE + GRID_PADDING},${end.y * CELL_SIZE + GRID_PADDING}`}
           className="stroke-transparent stroke-[10px] cursor-pointer"
           onClick={(e) => handleEdgeClick(e, i)}
         />,
@@ -596,41 +644,10 @@ export default function PicksTheoremVisualizer() {
     }
   }
 
-  // Generate polygon vertices with selection and hover states
-  const polygonVertices = vertices.map((point, index) => (
-    <g key={`vertex-${index}`}>
-      <circle
-        cx={point.x * CELL_SIZE}
-        cy={point.y * CELL_SIZE}
-        r={
-          POINT_RADIUS *
-          (selectedVertex === index || hoverVertex === index ? 2 : index === 0 && hoverFirstVertex ? 2.5 : 1.5)
-        }
-        className={`
-          ${index === 0 && hoverFirstVertex ? "fill-yellow-500 stroke-white stroke-2" : ""}
-          ${selectedVertex === index ? "fill-yellow-500" : "fill-black"} 
-          ${hoverVertex === index ? "stroke-white stroke-2" : ""}
-          cursor-pointer transition-all duration-150
-        `}
-        onClick={(e) => handleVertexClick(index, e)}
-        onMouseEnter={() => handleVertexHover(index)}
-        onMouseLeave={() => handleVertexHover(null)}
-      />
-      {selectedVertex === index && (
-        <circle
-          cx={point.x * CELL_SIZE}
-          cy={point.y * CELL_SIZE}
-          r={POINT_RADIUS * 3}
-          className="fill-gray-200 fill-opacity-50"
-        />
-      )}
-    </g>
-  ))
-
-  // Generate polygon edges
+  // Generate polygon edges visible line
   const polygonPath =
     vertices.length > 1
-      ? `M ${vertices.map((p) => `${p.x * CELL_SIZE},${p.y * CELL_SIZE}`).join(" L ")}${isPolygonClosed ? " Z" : ""}`
+      ? `M ${vertices.map((p) => `${p.x * CELL_SIZE + GRID_PADDING},${p.y * CELL_SIZE + GRID_PADDING}`).join(" L ")}${isPolygonClosed ? " Z" : ""}`
       : ""
 
   return (
@@ -651,143 +668,52 @@ export default function PicksTheoremVisualizer() {
                 onMouseUp={handleMouseUp}
                 onMouseLeave={handleMouseUp}
                 onDragStart={handleDragStart}
+                onClick={handleGridClick}
               >
                 {/* Grid lines */}
-                <g className="stroke-gray-200">
-                  {Array.from({ length: GRID_SIZE + 1 }).map((_, i) => (
-                    <React.Fragment key={`grid-lines-${i}`}>
-                      <line x1={0} y1={i * CELL_SIZE} x2={GRID_WIDTH} y2={i * CELL_SIZE} />
-                      <line x1={i * CELL_SIZE} y1={0} x2={i * CELL_SIZE} y2={GRID_HEIGHT} />
-                    </React.Fragment>
-                  ))}
-                </g>
-
-                {/* Polygon fill */}
-                {vertices.length > 2 && isPolygonClosed && (
-                  <path d={polygonPath} className="fill-yellow-500 fill-opacity-20 stroke-yellow-500 stroke-2" />
-                )}
+                {gridLines}
 
                 {/* Grid points */}
                 {gridPoints}
 
-                {/* Interior points */}
-                {interiorPointsCoords.map((point, index) => (
-                  <circle
-                    key={`interior-${index}`}
-                    cx={point.x * CELL_SIZE}
-                    cy={point.y * CELL_SIZE}
-                    r={POINT_RADIUS * 1.2}
-                    className="fill-gray-600"
-                  />
-                ))}
-
-                {/* Boundary points (excluding vertices) */}
-                {boundaryPointsCoords
-                  .filter((point) => !vertices.some((v) => v.x === point.x && v.y === point.y))
-                  .map((point, index) => {
-                    // Find which segment this boundary point belongs to
-                    let segmentIndex = -1
-                    for (let i = 0; i < vertices.length; i++) {
-                      const j = (i + 1) % vertices.length
-                      if (!isPolygonClosed && j === 0) continue
-
-                      const p1 = vertices[i]
-                      const p2 = vertices[j]
-
-                      // Check if point is on this segment
-                      const dx1 = point.x - p1.x
-                      const dy1 = point.y - p1.y
-                      const dx2 = p2.x - p1.x
-                      const dy2 = p2.y - p1.y
-
-                      // Check if point is collinear with segment
-                      if (dx1 * dy2 === dx2 * dy1) {
-                        // Check if point is within segment bounds
-                        if (
-                          point.x >= Math.min(p1.x, p2.x) &&
-                          point.x <= Math.max(p1.x, p2.x) &&
-                          point.y >= Math.min(p1.y, p2.y) &&
-                          point.y <= Math.max(p1.y, p2.y)
-                        ) {
-                          segmentIndex = i
-                          break
-                        }
-                      }
-                    }
-
-                    const isHovered =
-                      hoveredBoundaryPoint && hoveredBoundaryPoint.x === point.x && hoveredBoundaryPoint.y === point.y
-
-                    return (
-                      <g key={`boundary-${index}`}>
-                        {/* Highlight circle for better visibility in move mode */}
-                        {editMode === "move" && (
-                          <circle
-                            cx={point.x * CELL_SIZE}
-                            cy={point.y * CELL_SIZE}
-                            r={POINT_RADIUS * 2.5}
-                            className="fill-yellow-500 fill-opacity-20"
-                            style={{ display: isHovered ? "block" : "none" }}
-                          />
-                        )}
-
-                        {/* The actual boundary point */}
-                        <circle
-                          cx={point.x * CELL_SIZE}
-                          cy={point.y * CELL_SIZE}
-                          r={POINT_RADIUS * (editMode === "move" ? (isHovered ? 2 : 1.5) : 1.2)}
-                          className={`
-                            ${editMode === "move" ? "cursor-grab active:cursor-grabbing" : ""}
-                            ${isHovered ? "fill-yellow-500" : "fill-gray-800"}
-                            transition-all duration-150
-                          `}
-                          onMouseDown={(e) => segmentIndex >= 0 && handleBoundaryMouseDown(point, segmentIndex, e)}
-                          onMouseEnter={() => handleBoundaryMouseEnter(point)}
-                          onMouseLeave={handleBoundaryMouseLeave}
-                          onDragStart={(e) => e.preventDefault()}
-                        />
-                      </g>
-                    )
-                  })}
-
-                {/* Polygon edges with click areas for adding points */}
-                {polygonEdges}
+                {/* Polygon fill */}
+                {vertices.length > 2 && isPolygonClosed && (
+                  <path d={polygonPath} className="fill-yellow-500 fill-opacity-20" />
+                )}
 
                 {/* Polygon edges visible line */}
                 {vertices.length > 1 && (
                   <path
                     d={polygonPath}
-                    className="fill-none stroke-yellow-500 stroke-2"
+                    className="fill-none stroke-black stroke-2"
                     strokeLinecap="round"
                     strokeLinejoin="round"
                   />
                 )}
 
+                {/* Interior points */}
+                {interiorPointElements}
+
+                {/* Boundary points */}
+                {boundaryPointElements}
+
                 {/* Polygon vertices */}
                 {polygonVertices}
 
                 {/* Position indicator during dragging */}
-                {positionIndicator && editMode === "move" && (dragging?.active || draggingBoundary?.active) && (
+                {positionIndicator && vertices.length > 3 && isPolygonClosed && dragging?.active && (
                   <g>
                     <circle
-                      cx={positionIndicator.x * CELL_SIZE}
-                      cy={positionIndicator.y * CELL_SIZE}
+                      cx={positionIndicator.x * CELL_SIZE + GRID_PADDING}
+                      cy={positionIndicator.y * CELL_SIZE + GRID_PADDING}
                       r={POINT_RADIUS * 2}
                       className="fill-yellow-500 fill-opacity-50"
                     />
                     <line
-                      x1={(
-                        dragging?.active && dragging.index !== undefined
-                          ? vertices[dragging.index].x
-                          : draggingBoundary?.point?.x ?? 0
-                      ) * CELL_SIZE}
-                      y1={(
-                        dragging?.active && dragging.index !== undefined
-                          ? vertices[dragging.index].y
-                          : draggingBoundary?.point?.y ?? 0
-                      ) * CELL_SIZE}
-                      x2={positionIndicator.x * CELL_SIZE}
-                      y2={positionIndicator.y * CELL_SIZE}
+                      x1={vertices[dragging.index].x * CELL_SIZE + GRID_PADDING}
+                      y1={vertices[dragging.index].y * CELL_SIZE + GRID_PADDING}
+                      x2={positionIndicator.x * CELL_SIZE + GRID_PADDING}
+                      y2={positionIndicator.y * CELL_SIZE + GRID_PADDING}
                       className="stroke-yellow-500 stroke-dashed stroke-1 opacity-50"
                       strokeDasharray="4"
                     />
@@ -834,56 +760,6 @@ export default function PicksTheoremVisualizer() {
                 )}
               </div>
             </div>
-
-            <div className="space-y-2 mt-4">
-              <h3 className="text-sm font-medium text-gray-500">Edit Mode</h3>
-              <div className="flex gap-2">
-                <button
-                  onClick={() => changeEditMode("add")}
-                  className={`flex-1 py-2 px-4 rounded-lg transition-colors flex items-center justify-center gap-1 ${
-                    editMode === "add" ? "bg-yellow-500 text-white" : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                  }`}
-                >
-                  <Plus className="w-4 h-4" />
-                  <span>Add</span>
-                </button>
-                <button
-                  onClick={() => changeEditMode("delete")}
-                  className={`flex-1 py-2 px-4 rounded-lg transition-colors flex items-center justify-center gap-1 ${
-                    editMode === "delete" ? "bg-yellow-500 text-white" : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                  }`}
-                >
-                  <Minus className="w-4 h-4" />
-                  <span>Delete</span>
-                </button>
-                <button
-                  onClick={() => changeEditMode("move")}
-                  className={`flex-1 py-2 px-4 rounded-lg transition-colors flex items-center justify-center gap-1 ${
-                    editMode === "move" ? "bg-yellow-500 text-white" : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                  }`}
-                >
-                  <Move className="w-4 h-4" />
-                  <span>Move</span>
-                </button>
-              </div>
-            </div>
-
-            {editMode === "move" && (
-              <div className="mt-2 p-3 bg-yellow-50 rounded-lg border border-yellow-200">
-                <p className="text-sm text-gray-700 mb-1">
-                  <span className="font-medium">Move Mode Instructions:</span>
-                </p>
-                <ul className="text-xs text-gray-700 list-disc pl-4 space-y-1">
-                  <li>
-                    Click and drag <span className="font-medium">black vertices</span> to move them
-                  </li>
-                  <li>
-                    Click and drag <span className="font-medium">gray boundary points</span> to convert them to vertices
-                  </li>
-                  <li>Points highlight in yellow when they can be dragged</li>
-                </ul>
-              </div>
-            )}
 
             {!isPolygonClosed && vertices.length > 2 && (
               <button
@@ -972,38 +848,43 @@ export default function PicksTheoremVisualizer() {
                 <h3 className="text-lg font-semibold text-gray-900 mb-3">Example</h3>
 
                 <div className="bg-gray-50 p-4 rounded-lg flex flex-col items-center">
-                  <svg width="200" height="200" viewBox="0 0 200 200" className="border border-gray-300 bg-white">
+                  <svg width="200" height="200" viewBox="0 0 125 100" className="border border-gray-300 bg-white">
                     {/* Grid lines */}
                     <g className="stroke-gray-200">
-                      {Array.from({ length: 6 }).map((_, i) => (
+                      {Array.from({ length: 5 }).map((_, i) => (
                         <React.Fragment key={`modal-grid-${i}`}>
-                          <line x1={0} y1={i * 40} x2={200} y2={i * 40} />
-                          <line x1={i * 40} y1={0} x2={i * 40} y2={200} />
+                          <line x1={0} y1={i*25} x2={125} y2={i*25} />
+                          <line x1={i*25} y1={0} x2={i*25} y2={100} />
                         </React.Fragment>
                       ))}
                     </g>
-
-                    {/* Example triangle */}
-                    <path
-                      d="M 40,40 L 160,40 L 40,160 Z"
-                      className="fill-yellow-500 fill-opacity-20 stroke-yellow-500 stroke-2"
-                    />
-
+                    {/* Triangle fill */}
+                    <polygon points="25,75 100,75 25,0" className="fill-yellow-500 fill-opacity-20 stroke-black stroke-2" />
+                    {/* Grid points */}
+                    {Array.from({ length: 5 }).map((_, y) =>
+                      Array.from({ length: 6 }).map((_, x) => (
+                        <circle
+                          key={`modal-point-${x}-${y}`}
+                          cx={x*25}
+                          cy={100-y*25}
+                          r={2}
+                          className="fill-gray-400"
+                        />
+                      ))
+                    )}
                     {/* Boundary points */}
-                    <circle cx={40} cy={40} r={5} className="fill-black" />
-                    <circle cx={80} cy={40} r={5} className="fill-black" />
-                    <circle cx={120} cy={40} r={5} className="fill-black" />
-                    <circle cx={160} cy={40} r={5} className="fill-black" />
-                    <circle cx={40} cy={80} r={5} className="fill-black" />
-                    <circle cx={40} cy={120} r={5} className="fill-black" />
-                    <circle cx={40} cy={160} r={5} className="fill-black" />
-                    <circle cx={80} cy={80} r={5} className="fill-black" />
-                    <circle cx={120} cy={80} r={5} className="fill-black" />
-
-                    {/* Interior points */}
-                    <circle cx={80} cy={80} r={4} className="fill-gray-600" />
+                    <circle cx={25} cy={75} r={4} className="fill-yellow-500 stroke-black stroke-2" />
+                    <circle cx={50} cy={75} r={4} className="fill-yellow-500 stroke-black stroke-2" />
+                    <circle cx={75} cy={75} r={4} className="fill-yellow-500 stroke-black stroke-2" />
+                    <circle cx={100} cy={75} r={4} className="fill-yellow-500 stroke-black stroke-2" />
+                    <circle cx={75} cy={50} r={4} className="fill-yellow-500 stroke-black stroke-2" />
+                    <circle cx={50} cy={25} r={4} className="fill-yellow-500 stroke-black stroke-2" />
+                    <circle cx={25} cy={0} r={4} className="fill-yellow-500 stroke-black stroke-2" />
+                    <circle cx={25} cy={25} r={4} className="fill-yellow-500 stroke-black stroke-2" />
+                    <circle cx={25} cy={50} r={4} className="fill-yellow-500 stroke-black stroke-2" />
+                    {/* Interior point */}
+                    <circle cx={50} cy={50} r={4} className="fill-gray-200 stroke-black stroke-2" />
                   </svg>
-
                   <div className="mt-4 text-center">
                     <p className="text-gray-700">
                       <strong>Boundary points (b):</strong> 9
