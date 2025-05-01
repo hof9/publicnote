@@ -22,7 +22,7 @@ export default function StarGeometry() {
   })
   const [showOutline, setShowOutline] = useState(false)
   const [showFill, setShowFill] = useState(false)
-  const svgRef = useRef(null)
+  const svgRef = useRef<SVGSVGElement>(null)
 
   const radius = 120
   const centerX = 200
@@ -79,7 +79,7 @@ export default function StarGeometry() {
 
   // Animation effect
   useEffect(() => {
-    let timer
+    let timer: NodeJS.Timeout
     if (playing && step < maxSteps) {
       timer = setTimeout(() => {
         setStep((prev) => (prev < maxSteps ? prev + 1 : prev))
@@ -123,7 +123,9 @@ export default function StarGeometry() {
     }
   }
 
-  const toggleGuide = (guide) => {
+  type GuideKey = keyof typeof showGuides
+
+  const toggleGuide = (guide: GuideKey) => {
     setShowGuides({
       ...showGuides,
       [guide]: !showGuides[guide],
@@ -131,7 +133,14 @@ export default function StarGeometry() {
   }
 
   // Function to draw an arc for angle measurement
-  const drawAngleArc = (cx, cy, radius, startAngle, endAngle, color) => {
+  const drawAngleArc = (
+    cx: number,
+    cy: number,
+    radius: number,
+    startAngle: number,
+    endAngle: number,
+    color: string
+  ) => {
     const start = {
       x: cx + radius * Math.cos(startAngle),
       y: cy + radius * Math.sin(startAngle),
@@ -152,7 +161,7 @@ export default function StarGeometry() {
     if (!svgRef.current) return
 
     // Clone the SVG element to avoid modifying the displayed one
-    const svgElement = svgRef.current.cloneNode(true)
+    const svgElement = svgRef.current.cloneNode(true) as SVGSVGElement
 
     // Set proper attributes for standalone SVG
     svgElement.setAttribute("xmlns", "http://www.w3.org/2000/svg")
