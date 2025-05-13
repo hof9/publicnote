@@ -27,6 +27,17 @@ export default function DevPage() {
             </div>
             <p className="text-gray-600">A weather monitoring and control panel for tracking and analyzing weather data.</p>
           </Link>
+          <Link href="/dev/digital-garden" className="p-6 border rounded-lg hover:bg-gray-50 transition-colors">
+            <div className="flex items-center gap-4 mb-2">
+              <div className="w-10 h-10 rounded-full border-2 border-black bg-green-500 flex items-center justify-center">
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                </svg>
+              </div>
+              <h3 className="text-xl font-medium">Digital Garden</h3>
+            </div>
+            <p className="text-gray-600">Plant and grow your own interactive digital garden with beautiful animated flowers.</p>
+          </Link>
           <Link href="/dev/linktwo" className="p-6 border rounded-lg hover:bg-gray-50 transition-colors">
             <h3 className="text-xl font-medium mb-2">Link two</h3>
             <p className="text-gray-600">text description</p>
