@@ -27,20 +27,18 @@ export default function DevPage() {
             </div>
             <p className="text-gray-600">A weather monitoring and control panel for tracking and analyzing weather data.</p>
           </Link>
-          <Link href="/dev/digital-garden" className="p-6 border rounded-lg hover:bg-gray-50 transition-colors">
+          <Link href="/dev/experiment" className="p-6 border rounded-lg hover:bg-gray-50 transition-colors">
             <div className="flex items-center gap-4 mb-2">
-              <div className="w-10 h-10 rounded-full border-2 border-black bg-green-500 flex items-center justify-center">
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                </svg>
+              <div className="w-10 h-10 rounded-full border-2 border-black bg-yellow-500 flex items-center justify-center">
+                <img 
+                  src="data:image/svg+xml,%3C%3Fxml%20version%3D%221.0%22%20encoding%3D%22utf-8%22%3F%3E%3C!--%20License%3A%20MIT.%20Made%20by%20artcoholic%3A%20https%3A%2F%2Fgithub.com%2Fartcoholic%2Fakar-icons%20--%3E%3Csvg%20width%3D%22800px%22%20height%3D%22800px%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M12%2022C17.5228%2022%2022%2017.5228%2022%2012C22%206.47715%2017.5228%202%2012%202C6.47715%202%202%206.47715%202%2012C2%2017.5228%206.47715%2022%2012%2022Z%22%20stroke%3D%22%23000000%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3Cpath%20d%3D%22M12%208V16%22%20stroke%3D%22%23000000%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3Cpath%20d%3D%22M8%2012H16%22%20stroke%3D%22%23000000%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3C%2Fsvg%3E"
+                  alt="Experiment Icon"
+                  className="w-6 h-6"
+                />
               </div>
-              <h3 className="text-xl font-medium">Digital Garden</h3>
+              <h3 className="text-xl font-medium">Experiment</h3>
             </div>
-            <p className="text-gray-600">Plant and grow your own interactive digital garden with beautiful animated flowers.</p>
-          </Link>
-          <Link href="/dev/linktwo" className="p-6 border rounded-lg hover:bg-gray-50 transition-colors">
-            <h3 className="text-xl font-medium mb-2">Link two</h3>
-            <p className="text-gray-600">text description</p>
+            <p className="text-gray-600">A space for testing new features and ideas.</p>
           </Link>
         </div>
       </section>
