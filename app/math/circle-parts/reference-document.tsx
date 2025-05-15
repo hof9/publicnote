@@ -17,6 +17,12 @@ export default function ReferenceDocument() {
             <div>The set of points equidistant from a given point (the center).</div>
             <div className="flex justify-center items-center">
               <div className="relative w-20 h-20"></div>
+              <svg width="200" height="200" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="150" cy="150" r="50" fill="none" stroke="black" stroke-width="3" />
+              <circle cx="150" cy="150" r="3" fill="black" />
+              <text x="135" y="155" font-weight="bold" font-size="16">P</text>
+              <text x="210" y="210" font-weight="bold" font-size="16">Circle P</text>
+            </svg>
             </div>
           </div>
 
@@ -35,6 +41,7 @@ export default function ReferenceDocument() {
             <div>A segment with endpoints on the circle.</div>
             <div className="flex justify-center items-center">
               <div className="relative w-20 h-20"></div>
+
             </div>
           </div>
 
