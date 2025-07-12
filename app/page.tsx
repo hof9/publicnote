@@ -56,7 +56,7 @@ export default function Home() {
 
         <section id="features" className="py-24">
           <div className="container">
-            <h2 className="text-3xl font-bold tracking-tighter mb-12">Featured Math Tools</h2>
+            <h2 className="text-3xl font-bold tracking-tighter mb-12">Featured Learning Tools</h2>
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
               <Link href="/math/square-generator" className="group p-6 border border-white/10 rounded-xl hover:border-yellow-500/50 transition-colors">
                 <div className="flex items-center gap-3 mb-4">
@@ -127,6 +127,22 @@ export default function Home() {
                     </div>
                     <div className="text-sm text-center text-yellow-500/80">7 × 1</div>
                   </div>
+                </div>
+              </Link>
+
+              <Link href="/classical-education" className="group p-6 border border-white/10 rounded-xl hover:border-yellow-500/50 transition-colors">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="p-2 bg-yellow-500/10 rounded-lg">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-yellow-500">
+                      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                      <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/>
+                    </svg>
+                  </div>
+                  <h3 className="text-xl font-semibold">Classical Education</h3>
+                </div>
+                <p className="text-gray-400">Explore the timeless wisdom of classical education through interactive tools and resources.</p>
+                <div className="mt-4 flex items-center gap-2 text-yellow-500/80">
+                  <span className="text-sm">Trivium • Quadrivium • Great Books</span>
                 </div>
               </Link>
             </div>
